@@ -63,6 +63,12 @@ public class IngredientController : MonoBehaviour
     {
         UpdateHoverState();
 
+        // Update life bar fill amount if hovered
+        if (isHovered && lifeBarFill != null)
+            lifeBarFill.fillAmount = Mathf.Clamp01(currentLife / maxLifeTime);
+
+        if (isRotted) return; // No need to update decay if already rotted
+
         // Apply slower decay rate when inside the fridge
         float decayRate = isInFridge ? decayRateInFridge : 1.0f;
         currentLife -= Time.deltaTime * decayRate;
@@ -75,12 +81,7 @@ public class IngredientController : MonoBehaviour
             foodMaterial.SetFloat("_DecayAmount", currentDecay);
         }
 
-        // Update life bar fill amount if hovered
-        if (isHovered && lifeBarFill != null)
-            lifeBarFill.fillAmount = Mathf.Clamp01(currentLife / maxLifeTime);
-
-        // Check for rotting condition
-        if (!isRotted && currentLife <= 0f)
+        if (currentLife <= 0f)
         {
             isRotted = true;
             Debug.Log(ingredientName + " has rotted!");

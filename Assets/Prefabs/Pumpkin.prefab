@@ -30,7 +30,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3577128605563780332, guid: 9529713b7bb494244b2b83987af8ad44, type: 3}
       propertyPath: maxLifeTime
-      value: 60
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 3577128605563780332, guid: 9529713b7bb494244b2b83987af8ad44, type: 3}
       propertyPath: ingredientName
