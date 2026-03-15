@@ -846,8 +846,8 @@ PlayerSettings:
   editorAssembliesCompatibilityLevel: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: COMP395_FinalProject_Studio8
-  metroPackageVersion: 
+  metroPackageName: COMP395FinalProjectStudio8
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -855,7 +855,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: COMP395_FinalProject_Studio8
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: COMP395_FinalProject_Studio8
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0

@@ -23,4 +23,5 @@ public class IngredientMapping
 {
     public IngredientType type;
     public GameObject prefab;
+    public int capacityOfBox;
 }

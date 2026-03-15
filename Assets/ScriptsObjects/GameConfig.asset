@@ -21,3 +21,4 @@ MonoBehaviour:
   ingredientMappings:
   - type: 0
     prefab: {fileID: 1498797515652644912, guid: ff29d08a9a6958a4a924868b6b97d46a, type: 3}
+    capacityOfBox: 6

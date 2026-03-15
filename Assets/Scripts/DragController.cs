@@ -3,6 +3,8 @@ using UnityEngine.InputSystem;
 
 public class DragController : MonoBehaviour
 {
+    [SerializeField] private LayerMask ignoredLayers;
+
     private Vector3 mOffset;
     private float mZCoord;
     private bool isDragging = false;
@@ -15,7 +17,9 @@ public class DragController : MonoBehaviour
         if (mouse.leftButton.wasPressedThisFrame)
         {
             Ray ray = Camera.main.ScreenPointToRay(mouse.position.ReadValue());
-            if (Physics.Raycast(ray, out RaycastHit hit) && hit.transform == transform)
+            int raycastMask = ~ignoredLayers.value;
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, raycastMask) &&
+                (hit.transform == transform || hit.transform.IsChildOf(transform)))
             {
                 mZCoord = Camera.main.WorldToScreenPoint(transform.position).z;
                 mOffset = transform.position - GetMouseWorldPos();
