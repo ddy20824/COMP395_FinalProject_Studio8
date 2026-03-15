@@ -64,9 +64,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 1864417026768394869, guid: 9529713b7bb494244b2b83987af8ad44, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1990250380078060336, guid: 9529713b7bb494244b2b83987af8ad44, type: 3}
       propertyPath: m_Name
       value: Tomato
+      objectReference: {fileID: 0}
+    - target: {fileID: 1990250380078060336, guid: 9529713b7bb494244b2b83987af8ad44, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3577128605563780332, guid: 9529713b7bb494244b2b83987af8ad44, type: 3}
       propertyPath: capacity
@@ -87,6 +95,18 @@ PrefabInstance:
     - target: {fileID: 3577128605563780332, guid: 9529713b7bb494244b2b83987af8ad44, type: 3}
       propertyPath: ingredientName
       value: Tomato
+      objectReference: {fileID: 0}
+    - target: {fileID: 4081636251242344560, guid: 9529713b7bb494244b2b83987af8ad44, type: 3}
+      propertyPath: ignoredLayers.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 4466266677139641654, guid: 9529713b7bb494244b2b83987af8ad44, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4825593026023895785, guid: 9529713b7bb494244b2b83987af8ad44, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4974107881321339889, guid: 9529713b7bb494244b2b83987af8ad44, type: 3}
       propertyPath: m_LocalPosition.x
