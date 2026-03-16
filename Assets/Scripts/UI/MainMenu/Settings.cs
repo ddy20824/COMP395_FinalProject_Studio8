@@ -16,7 +16,7 @@ public class Settings : BasePanel<Settings>
     {
         //button onclick: back to main
         btnBack.onClick.AddListener(() => {
-            this.HideMe();
+            HideMe();
             MainMenu.Instance.ShowMe();
         });
 

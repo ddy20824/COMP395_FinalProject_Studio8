@@ -2,11 +2,14 @@ using UnityEngine;
 
 public class BasePanel<T> : MonoBehaviour where T : MonoBehaviour
 {
+    private CanvasGroup canvasGroup;
     private static T instance;
     public static T Instance => instance;
 
     protected virtual void Awake()
     {
+        canvasGroup = GetComponent<CanvasGroup>();
+
         if (instance != null && instance != this as T)
         {
             Destroy(gameObject);
@@ -26,11 +29,15 @@ public class BasePanel<T> : MonoBehaviour where T : MonoBehaviour
 
     public virtual void ShowMe()
     {
-        this.gameObject.SetActive(true);
+        canvasGroup.alpha = 1;
+        canvasGroup.interactable = true;
+        canvasGroup.blocksRaycasts = true;
     }
 
     public virtual void HideMe()
     {
-        this.gameObject.SetActive(false);
+        canvasGroup.alpha = 0;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = false;
     }
 }
