@@ -9,7 +9,7 @@ public class BoxInteraction : MonoBehaviour
 
     [Header("Ingredient Content")]
     public Transform ingredientSpawnPoint;
-    public float ingredientSpacing = 0.16f;
+    public float ingredientSpacing = 0.3f;
     public float ingredientSpawnDelay = 0.2f;
 
     [Header("Open Conditions")]
@@ -75,13 +75,6 @@ public class BoxInteraction : MonoBehaviour
             {
                 closedBox.SetActive(false);
             }
-
-            // if (boxRigidbody != null)
-            // {
-            //     boxRigidbody.isKinematic = true;
-            // }
-
-            // SpawnIngredientsIfNeeded();
             hasOpened = true;
             return;
         }
@@ -106,7 +99,7 @@ public class BoxInteraction : MonoBehaviour
             Mathf.Max(0.01f, bounds.extents.z - insideCheckPadding.z));
 
         int layerMask = boxInsideCheckLayer.value == 0 ? Physics.AllLayers : boxInsideCheckLayer.value;
-        Collider[] hits = Physics.OverlapBox(bounds.center, halfExtents, Quaternion.identity, layerMask, QueryTriggerInteraction.Ignore);
+        Collider[] hits = Physics.OverlapBox(bounds.center, halfExtents, Quaternion.identity, layerMask, QueryTriggerInteraction.Collide);
 
         foreach (Collider hit in hits)
         {
@@ -131,28 +124,7 @@ public class BoxInteraction : MonoBehaviour
         ingredientPrefab = contentPrefab;
         ingredientCount = Mathf.Max(0, capacity);
 
-
-        if (spawnDelayCoroutine != null)
-        {
-            StopCoroutine(spawnDelayCoroutine);
-        }
-
-        spawnDelayCoroutine = StartCoroutine(SpawnIngredientsAfterDelay());
-    }
-
-    private IEnumerator SpawnIngredientsAfterDelay()
-    {
-        if (ingredientSpawnDelay > 0f)
-        {
-            yield return new WaitForSeconds(ingredientSpawnDelay);
-        }
-
-        if (boxRigidbody != null)
-        {
-            boxRigidbody.isKinematic = true;
-        }
         SpawnIngredientsIfNeeded();
-        spawnDelayCoroutine = null;
     }
 
     private void SpawnIngredientsIfNeeded()
@@ -187,7 +159,7 @@ public class BoxInteraction : MonoBehaviour
             return false;
         }
 
-        Collider[] hits = Physics.OverlapBox(center, halfExtents, Quaternion.identity, Physics.AllLayers, QueryTriggerInteraction.Ignore);
+        Collider[] hits = Physics.OverlapBox(center, halfExtents, Quaternion.identity, Physics.AllLayers, QueryTriggerInteraction.Collide);
 
         foreach (Collider hit in hits)
         {
