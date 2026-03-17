@@ -133,6 +133,7 @@ MonoBehaviour:
   hoverScaleMultiplier: 1.08
   hoverTintColor: {r: 1, g: 1, b: 0.9, a: 1}
   onIngredientRotten: {fileID: 11400000, guid: 36c18e52302ba3a4c90d5703455d1cb2, type: 2}
+  onSFXRequest: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
 --- !u!114 &4081636251242344560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,6 +149,7 @@ MonoBehaviour:
   ignoredLayers:
     serializedVersion: 2
     m_Bits: 0
+  onSFXRequest: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
 --- !u!54 &5119690676322088529
 Rigidbody:
   m_ObjectHideFlags: 0

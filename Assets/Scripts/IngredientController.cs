@@ -22,6 +22,7 @@ public class IngredientController : MonoBehaviour
 
     [Header("Events")]
     [SerializeField] private IngredientTypeEventChannel onIngredientRotten; // Event raised when ingredient rots
+    [SerializeField] private SFXTypeEventChannel onSFXRequest; // Event channel to request sound effects
 
     private float decaySpeed => 1f / maxLifeTime;
     private float currentLife;
@@ -86,6 +87,7 @@ public class IngredientController : MonoBehaviour
             isRotted = true;
             Debug.Log(ingredientName + " has rotted!");
             onIngredientRotten.Raise(type);
+            onSFXRequest.Raise(SFXType.IngredientRot);
             // TODO: Somewhere need to subscribe to implement rotten logic (e.g. deduct score)
         }
     }
@@ -115,6 +117,9 @@ public class IngredientController : MonoBehaviour
     {
         if (isHovered == hovered) return;
         isHovered = hovered;
+
+        if (isHovered)
+            onSFXRequest.Raise(SFXType.IngredientHover);
 
         if (lifeBarRoot != null)
             lifeBarRoot.SetActive(isHovered);
