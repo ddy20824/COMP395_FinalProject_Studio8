@@ -15,9 +15,13 @@ MonoBehaviour:
   allLevels:
   - levelName: Level1
     timeLimit: 180
-    availableIngredients: 00000000
+    availableIngredients: 0000000001000000
     orderSpawnRate: 10
     hasPowerOutageEvent: 0
   ingredientMappings:
   - type: 0
     prefab: {fileID: 1498797515652644912, guid: ff29d08a9a6958a4a924868b6b97d46a, type: 3}
+    capacityOfBox: 6
+  - type: 1
+    prefab: {fileID: 2247471851365886193, guid: 08d7b782fa0e08640ad9ffea5c10ffda, type: 3}
+    capacityOfBox: 3

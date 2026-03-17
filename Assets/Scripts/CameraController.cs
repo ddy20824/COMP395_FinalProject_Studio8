@@ -1,0 +1,83 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class CameraController : MonoBehaviour
+{
+    [Header("Rotation Limits")]
+    public float minVerticalAngle = -20f;
+    public float maxVerticalAngle = 80f;
+    public float minHorizontalAngle = -45f;
+    public float maxHorizontalAngle = 45f;
+
+    public float lookSensitivity = 0.1f;
+
+    [Header("Panning & Zoom")]
+    public float panSpeed = 0.05f;
+    public float zoomSpeed = 50f;
+
+    [Header("Position Boundaries")]
+    public Vector3 minBounds = new Vector3(-10, 0.5f, -10);
+    public Vector3 maxBounds = new Vector3(10, 10, 10);
+
+    // Save current rotation angles
+    private float yaw;
+    private float pitch;
+
+    void Start()
+    {
+        // init angles based on current rotation
+        Vector3 rot = transform.localRotation.eulerAngles;
+        // turn 0~360 to -180~180 for easy Clamp calculation
+        yaw = (rot.y > 180) ? rot.y - 360 : rot.y;
+        pitch = (rot.x > 180) ? rot.x - 360 : rot.x;
+    }
+
+    // use LateUpdate to ensure it runs after all other Updates (e.g. after potential target movement)
+    void LateUpdate()
+    {
+        var mouse = Mouse.current;
+        if (mouse == null) return;
+
+        // 1. right button rotation
+        if (mouse.rightButton.isPressed)
+        {
+            Vector2 delta = mouse.delta.ReadValue();
+
+            yaw += delta.x * lookSensitivity;
+            pitch -= delta.y * lookSensitivity;
+
+            // limit rotation angles
+            yaw = Mathf.Clamp(yaw, minHorizontalAngle, maxHorizontalAngle);
+            pitch = Mathf.Clamp(pitch, minVerticalAngle, maxVerticalAngle);
+
+            transform.localRotation = Quaternion.Euler(pitch, yaw, 0);
+        }
+
+        // 2. middle button panning
+        if (mouse.middleButton.isPressed)
+        {
+            Vector2 delta = mouse.delta.ReadValue();
+            Vector3 move = new Vector3(-delta.x * panSpeed, -delta.y * panSpeed, 0);
+            transform.Translate(move, Space.Self);
+        }
+
+        // 3. scroll wheel zooming
+        float scroll = mouse.scroll.ReadValue().y;
+        if (scroll != 0)
+        {
+            transform.Translate(0, 0, scroll * zoomSpeed * Time.deltaTime, Space.Self);
+        }
+
+        // 4. limit position within boundaries
+        ApplyPositionBoundaries();
+    }
+
+    void ApplyPositionBoundaries()
+    {
+        Vector3 pos = transform.position;
+        pos.x = Mathf.Clamp(pos.x, minBounds.x, maxBounds.x);
+        pos.y = Mathf.Clamp(pos.y, minBounds.y, maxBounds.y);
+        pos.z = Mathf.Clamp(pos.z, minBounds.z, maxBounds.z);
+        transform.position = pos;
+    }
+}
