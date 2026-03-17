@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class DragController : MonoBehaviour
 {
     [SerializeField] private LayerMask ignoredLayers;
+    [SerializeField] private SFXTypeEventChannel onSFXRequest; // Event channel to request sound effects
 
     private Vector3 mOffset;
     private float mZCoord;
@@ -24,6 +25,8 @@ public class DragController : MonoBehaviour
                 mZCoord = Camera.main.WorldToScreenPoint(transform.position).z;
                 mOffset = transform.position - GetMouseWorldPos();
                 isDragging = true;
+                onSFXRequest.Raise(SFXType.IngredientDrag);
+
             }
         }
 
@@ -35,6 +38,7 @@ public class DragController : MonoBehaviour
         if (mouse.leftButton.wasReleasedThisFrame)
         {
             isDragging = false;
+            onSFXRequest.Raise(SFXType.IngredientDrop);
         }
     }
 
