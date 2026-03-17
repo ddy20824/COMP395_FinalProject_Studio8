@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -19,6 +20,15 @@ public class CameraController : MonoBehaviour
     public Vector3 minBounds = new Vector3(-10, 0.5f, -10);
     public Vector3 maxBounds = new Vector3(10, 10, 10);
 
+    [Header("Camera Focus")]
+    [SerializeField]
+    private CameraFocusEventChannel cameraFocusChannel;
+
+    private Vector3 originalPosition;
+    private Quaternion originalRotation;
+    private bool isExternalControlled = false;
+    private Coroutine moveCoroutine;
+
     // Save current rotation angles
     private float yaw;
     private float pitch;
@@ -32,11 +42,15 @@ public class CameraController : MonoBehaviour
         pitch = (rot.x > 180) ? rot.x - 360 : rot.x;
     }
 
+    private void OnEnable() => cameraFocusChannel.Subscribe(OnCameraFocus);
+    private void OnDisable() => cameraFocusChannel.Unsubscribe(OnCameraFocus);
+
     // use LateUpdate to ensure it runs after all other Updates (e.g. after potential target movement)
     void LateUpdate()
     {
         var mouse = Mouse.current;
         if (mouse == null) return;
+        if (isExternalControlled) return; // skip manual control when externally controlled
 
         // 1. right button rotation
         if (mouse.rightButton.isPressed)
@@ -79,5 +93,50 @@ public class CameraController : MonoBehaviour
         pos.y = Mathf.Clamp(pos.y, minBounds.y, maxBounds.y);
         pos.z = Mathf.Clamp(pos.z, minBounds.z, maxBounds.z);
         transform.position = pos;
+    }
+
+    private void OnCameraFocus(CameraFocusData data)
+    {
+        if (data.isFocusing)
+        {
+            // record original position and rotation before moving to target
+            originalPosition = transform.position;
+            originalRotation = transform.rotation;
+            isExternalControlled = true;
+
+            StartSmoothMove(data.targetTransform.position, data.targetTransform.rotation * new Quaternion(0, 180, 0, 1)); // fly to targetTransform and rotate to face it
+        }
+        else
+        {
+            // Turn back to original position and rotation
+            StartSmoothMove(originalPosition, originalRotation);
+            isExternalControlled = false;
+        }
+    }
+
+    private void StartSmoothMove(Vector3 targetPos, Quaternion targetRot)
+    {
+        if (moveCoroutine != null) StopCoroutine(moveCoroutine);
+        moveCoroutine = StartCoroutine(SmoothMove(targetPos, targetRot));
+    }
+
+    private IEnumerator SmoothMove(Vector3 targetPos, Quaternion targetRot)
+    {
+        float duration = 1.0f; // how long the transition takes
+        float elapsed = 0;
+        Vector3 startPos = transform.position;
+        Quaternion startRot = transform.rotation;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float percent = elapsed / duration;
+            // use smoothstep curve for smoother start and end (ease in/out)
+            float curve = Mathf.SmoothStep(0, 1, percent);
+
+            transform.position = Vector3.Lerp(startPos, targetPos, curve);
+            transform.rotation = Quaternion.Slerp(startRot, targetRot, curve);
+            yield return null;
+        }
     }
 }

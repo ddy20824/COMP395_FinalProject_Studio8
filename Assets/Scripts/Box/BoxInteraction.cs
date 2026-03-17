@@ -124,6 +124,10 @@ public class BoxInteraction : MonoBehaviour
         ingredientPrefab = contentPrefab;
         ingredientCount = Mathf.Max(0, capacity);
 
+        if (boxRigidbody != null)
+        {
+            boxRigidbody.isKinematic = true;
+        }
         SpawnIngredientsIfNeeded();
     }
 
