@@ -197,6 +197,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pumpkin
       objectReference: {fileID: 0}
+    - target: {fileID: 3822102611197003565, guid: 08d7b782fa0e08640ad9ffea5c10ffda, type: 3}
+      propertyPath: penaltyScore
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4731525446382444592, guid: 08d7b782fa0e08640ad9ffea5c10ffda, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.5
@@ -991,18 +995,6 @@ PrefabInstance:
       value: Waste_Bin
       objectReference: {fileID: 0}
     - target: {fileID: 1821271591018435321, guid: f43818c9cb19fac4fa43f52d4a211840, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1821271591018435321, guid: f43818c9cb19fac4fa43f52d4a211840, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1821271591018435321, guid: f43818c9cb19fac4fa43f52d4a211840, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1821271591018435321, guid: f43818c9cb19fac4fa43f52d4a211840, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.35
       objectReference: {fileID: 0}
@@ -1041,10 +1033,6 @@ PrefabInstance:
     - target: {fileID: 1821271591018435321, guid: f43818c9cb19fac4fa43f52d4a211840, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1821271591018435321, guid: f43818c9cb19fac4fa43f52d4a211840, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1659,6 +1647,14 @@ PrefabInstance:
     - target: {fileID: 1498797515652644912, guid: ff29d08a9a6958a4a924868b6b97d46a, type: 3}
       propertyPath: m_Name
       value: Tomato
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536960772597690348, guid: ff29d08a9a6958a4a924868b6b97d46a, type: 3}
+      propertyPath: faceCamera
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4536960772597690348, guid: ff29d08a9a6958a4a924868b6b97d46a, type: 3}
+      propertyPath: penaltyScore
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5356348448343083249, guid: ff29d08a9a6958a4a924868b6b97d46a, type: 3}
       propertyPath: m_LocalPosition.x

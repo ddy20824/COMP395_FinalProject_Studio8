@@ -10,6 +10,7 @@ public class IngredientController : MonoBehaviour
     [SerializeField] private int capacity; // For bulk items, represents quantity; for others, it's 1
     [SerializeField] private float maxLifeTime = 20f;      // Total lifespan in seconds
     [SerializeField] private float decayRateInFridge = 0.2f; // Decay rate multiplier when in fridge
+    [SerializeField] private int penaltyScore; // Score deducted from the total score after ingrediant trashed
 
     [Header("Life Bar UI")]
     [SerializeField] private GameObject lifeBarRoot;  // Root Canvas/GameObject to show/hide
@@ -37,6 +38,7 @@ public class IngredientController : MonoBehaviour
     public string GetIngredientName() => ingredientName;
     public IngredientType GetIngredientType() => type;
     public int GetCapacity() => capacity;
+    public int GetPenaltyScore() => penaltyScore;
 
     void Start()
     {
