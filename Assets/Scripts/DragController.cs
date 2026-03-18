@@ -47,6 +47,8 @@ public class DragController : MonoBehaviour
         }
     }
 
+            isDragging = false;
+            onSFXRequest.Raise(GameplaySFXType.INGR_DROP);
     private void UpdatePositionOnSurface(Vector2 mousePos)
     {
         Ray ray = Camera.main.ScreenPointToRay(mousePos);
@@ -69,7 +71,8 @@ public class DragController : MonoBehaviour
         if (rb != null) rb.isKinematic = true; // Force disable physics while dragging
 
         if (onSFXRequest != null)
-            onSFXRequest.Raise(SFXType.IngredientDrag);
+            onSFXRequest.Raise(GameplaySFXType.INGR_DRAG);
+
     }
 
     private void EndDrag()
