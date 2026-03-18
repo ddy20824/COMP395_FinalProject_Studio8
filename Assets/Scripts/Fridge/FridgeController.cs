@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,6 +13,11 @@ public class FridgeController : BaseStorage
     [SerializeField]
     private Transform cameraSlot;
 
+    [Header("Exploded View Settings")]
+    [SerializeField] private float itemSpacing = 0.3f;
+    [SerializeField] private int columns = 3;
+    [SerializeField] private Transform explodeOrigin;
+
     private Collider selfCollider;
     private bool isOpen = false;
 
@@ -24,11 +30,11 @@ public class FridgeController : BaseStorage
     {
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
-            ControllerDoorByScreenPoint(Mouse.current.position.ReadValue());
+            HandleFridgeInput(Mouse.current.position.ReadValue());
         }
     }
 
-    private void ControllerDoorByScreenPoint(Vector2 screenPoint)
+    private void HandleFridgeInput(Vector2 screenPoint)
     {
         if (Camera.main == null)
         {
@@ -38,9 +44,20 @@ public class FridgeController : BaseStorage
         Ray ray = Camera.main.ScreenPointToRay(screenPoint);
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
         {
-            if (hit.collider != null && hit.collider == selfCollider)
+            GameObject hitObj = hit.transform.gameObject;
+
+            // Situation A: Fridge is open and clicked on an ingredient inside the fridge
+            if (isOpen && storedItems.Contains(hitObj))
+            {
+                TakeOutItem(hitObj);
+                return;
+            }
+
+            // Situation B: Clicked on the fridge body (or clicked on air while fridge is open)
+            if (hit.collider == selfCollider || (isOpen && hit.collider != null))
             {
                 ToggleFridge();
+                HideExplodedView();
             }
         }
     }
@@ -53,11 +70,12 @@ public class FridgeController : BaseStorage
 
         if (isOpen)
         {
-            // TODO: Trigger the "exploded view" of ingredients inside the fridge, e.g. by enabling a child GameObject with a special layout and animation, or by sending an event to the ingredients to move to their "exploded" positions.
+            StartCoroutine(DelayedShowExplodedView(0.5f));
         }
         else
         {
-            // TODO: Hide the "exploded view" and move ingredients back to their original positions inside the fridge.
+            HideExplodedView();
+            ToggleHighlight(false);
         }
 
         // Camera Focus when open fridge to show the ingredients, and turn back to original position when close fridge
@@ -70,8 +88,35 @@ public class FridgeController : BaseStorage
         cameraFocusChannel.Raise(data);
     }
 
+    private IEnumerator DelayedShowExplodedView(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (isOpen) ShowExplodedView();
+    }
+
     protected override void OnItemStored(GameObject item)
     {
+        if (item.TryGetComponent(out Rigidbody rb))
+        {
+            rb.isKinematic = true;
+            rb.linearVelocity = Vector3.zero;
+        }
+
+        if (item.TryGetComponent(out Collider col))
+        {
+            col.enabled = false;
+        }
+
+        if (item.TryGetComponent(out DragController drag))
+        {
+            drag.enabled = false;
+        }
+
+        if (item.TryGetComponent(out IngredientController ingredient))
+        {
+            ingredient.SetInFridge(true);
+        }
+
         item.SetActive(false);
         Debug.Log($"Fridge save: {item.name}");
     }
@@ -80,5 +125,89 @@ public class FridgeController : BaseStorage
     {
         base.ToggleHighlight(show);
         animator.SetBool("isNear", show);
+    }
+
+    private void ShowExplodedView()
+    {
+        for (int i = 0; i < storedItems.Count; i++)
+        {
+            GameObject item = storedItems[i];
+            item.SetActive(true);
+
+            int row = i / columns;
+            int col = i % columns;
+
+            Vector3 targetPos = explodeOrigin.position +
+                                explodeOrigin.right * (col - (columns - 1) / 2f) * itemSpacing +
+                                explodeOrigin.up * (-row * itemSpacing);
+
+            StartCoroutine(AnimateToPosition(item.transform, targetPos, true));
+        }
+    }
+
+    private void HideExplodedView()
+    {
+        foreach (var item in storedItems)
+        {
+            StartCoroutine(AnimateToPosition(item.transform, storageRoot.position, false));
+        }
+    }
+
+    private IEnumerator AnimateToPosition(Transform target, Vector3 targetPos, bool isOpening)
+    {
+        float elapsed = 0f;
+        float duration = 0.5f;
+        Vector3 startPos = target.position;
+        Quaternion startRot = target.rotation;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+
+            t = Mathf.SmoothStep(0, 1, t);
+
+            target.position = Vector3.Lerp(startPos, targetPos, t);
+
+            if (isOpening)
+                target.rotation = Quaternion.Lerp(startRot, explodeOrigin.rotation, t);
+
+            yield return null;
+        }
+
+        if (!isOpening)
+        {
+            target.gameObject.SetActive(false);
+        }
+        else
+        {
+            if (target.TryGetComponent(out Collider col)) col.enabled = true;
+        }
+    }
+
+    protected override void OnItemRemoved(GameObject item)
+    {
+        if (isOpen)
+        {
+            ToggleFridge();
+        }
+        if (item.TryGetComponent(out Rigidbody rb))
+        {
+            rb.isKinematic = false;
+        }
+        if (item.TryGetComponent(out Collider col))
+        {
+            col.enabled = true;
+        }
+        if (item.TryGetComponent(out DragController drag))
+        {
+            drag.enabled = true;
+            drag.StartDrag();
+        }
+        if (item.TryGetComponent(out IngredientController ingredient))
+        {
+            ingredient.SetInFridge(false);
+        }
+        item.SetActive(true);
     }
 }

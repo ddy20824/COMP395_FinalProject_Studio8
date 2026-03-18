@@ -23,11 +23,7 @@ public class DragController : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, raycastMask) &&
                 (hit.transform == transform || hit.transform.IsChildOf(transform)))
             {
-                mZCoord = Camera.main.WorldToScreenPoint(transform.position).z;
-                mOffset = transform.position - GetMouseWorldPos();
-                isDragging = true;
-                onSFXRequest.Raise(SFXType.IngredientDrag);
-
+                StartDrag();
             }
         }
 
@@ -46,6 +42,17 @@ public class DragController : MonoBehaviour
             isDragging = false;
             onSFXRequest.Raise(SFXType.IngredientDrop);
         }
+    }
+
+    public void StartDrag()
+    {
+        mZCoord = Camera.main.WorldToScreenPoint(transform.position).z;
+        mOffset = transform.position - GetMouseWorldPos();
+        isDragging = true;
+
+        if (onSFXRequest != null)
+            onSFXRequest.Raise(SFXType.IngredientDrag);
+
     }
 
     private Vector3 GetMouseWorldPos()

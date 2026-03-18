@@ -16,6 +16,8 @@ public abstract class BaseStorage : MonoBehaviour
     public virtual void ToggleHighlight(bool show)
     {
         Debug.Log($"{name} ToggleHighlight: {show}");
+
+        // TODO: Implement visual feedback for highlighting, e.g. by enabling an outline shader, changing material color, or showing a UI indicator. The actual implementation will depend on the art assets and design of the game.
         // if (outlineRenderer == null) return;
         // outlineRenderer.material.SetInt("_IsOutlineEnabled", show ? 1 : 0);
     }
@@ -31,11 +33,6 @@ public abstract class BaseStorage : MonoBehaviour
 
         storedItems.Add(item);
 
-        if (item.TryGetComponent(out Rigidbody rb))
-        {
-            rb.isKinematic = true;
-        }
-
         item.transform.SetParent(storageRoot);
 
         OnItemStored(item);
@@ -45,6 +42,20 @@ public abstract class BaseStorage : MonoBehaviour
     }
 
     protected abstract void OnItemStored(GameObject item);
+
+    public virtual void TakeOutItem(GameObject item)
+    {
+        if (storedItems.Contains(item))
+        {
+            storedItems.Remove(item);
+
+            item.transform.SetParent(null);
+
+            OnItemRemoved(item);
+        }
+    }
+
+    protected abstract void OnItemRemoved(GameObject item);
 
     public List<GameObject> GetStoredItems() => storedItems;
 }
