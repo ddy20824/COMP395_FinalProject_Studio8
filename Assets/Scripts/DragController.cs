@@ -9,6 +9,7 @@ public class DragController : MonoBehaviour
     private Vector3 mOffset;
     private float mZCoord;
     private bool isDragging = false;
+    private BaseStorage currentAimedStorage;
 
     void Update()
     {
@@ -22,11 +23,7 @@ public class DragController : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, raycastMask) &&
                 (hit.transform == transform || hit.transform.IsChildOf(transform)))
             {
-                mZCoord = Camera.main.WorldToScreenPoint(transform.position).z;
-                mOffset = transform.position - GetMouseWorldPos();
-                isDragging = true;
-                onSFXRequest.Raise(SFXType.IngredientDrag);
-
+                StartDrag();
             }
         }
 
@@ -37,9 +34,25 @@ public class DragController : MonoBehaviour
 
         if (mouse.leftButton.wasReleasedThisFrame)
         {
+            if (currentAimedStorage != null && !currentAimedStorage.IsFull)
+            {
+                currentAimedStorage.StoreItem(this.gameObject);
+            }
+
             isDragging = false;
             onSFXRequest.Raise(SFXType.IngredientDrop);
         }
+    }
+
+    public void StartDrag()
+    {
+        mZCoord = Camera.main.WorldToScreenPoint(transform.position).z;
+        mOffset = transform.position - GetMouseWorldPos();
+        isDragging = true;
+
+        if (onSFXRequest != null)
+            onSFXRequest.Raise(SFXType.IngredientDrag);
+
     }
 
     private Vector3 GetMouseWorldPos()
@@ -47,5 +60,32 @@ public class DragController : MonoBehaviour
         Vector3 mousePoint = Mouse.current.position.ReadValue();
         mousePoint.z = mZCoord;
         return Camera.main.ScreenToWorldPoint(mousePoint);
+    }
+
+    // Trigger Fridge highlight when hovering over it
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Fridge"))
+        {
+            var storage = other.GetComponentInParent<BaseStorage>();
+            if (storage != null)
+            {
+                currentAimedStorage = storage;
+                storage.ToggleHighlight(true);
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Fridge"))
+        {
+            var storage = other.GetComponentInParent<BaseStorage>();
+            if (storage != null && currentAimedStorage == storage)
+            {
+                storage.ToggleHighlight(false);
+                currentAimedStorage = null;
+            }
+        }
     }
 }
