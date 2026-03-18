@@ -130,6 +130,9 @@ MonoBehaviour:
   lifeBarRoot: {fileID: 4825593026023895785}
   lifeBarFill: {fileID: 8369091704562072064}
   faceCamera: 1
+  ingredientLayer:
+    serializedVersion: 2
+    m_Bits: 128
   hoverScaleMultiplier: 1.08
   hoverTintColor: {r: 1, g: 1, b: 0.9, a: 1}
   onIngredientRotten: {fileID: 11400000, guid: 36c18e52302ba3a4c90d5703455d1cb2, type: 2}
@@ -148,7 +151,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DragController
   ignoredLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
+  surfaceLayers:
+    serializedVersion: 2
+    m_Bits: 320
+  surfaceOffset: 0.1
   onSFXRequest: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
 --- !u!54 &5119690676322088529
 Rigidbody:

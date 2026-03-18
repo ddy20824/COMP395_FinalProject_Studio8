@@ -18,6 +18,7 @@ public class IngredientController : MonoBehaviour
     [SerializeField] private bool faceCamera = true;  // Keep life bar readable in 3D by billboard behavior
 
     [Header("Hover Feedback")]
+    [SerializeField] private LayerMask ingredientLayer;
     [SerializeField] private float hoverScaleMultiplier = 1.08f;
     [SerializeField] private Color hoverTintColor = new Color(1f, 1f, 0.9f, 1f);
 
@@ -108,8 +109,8 @@ public class IngredientController : MonoBehaviour
         }
 
         Ray ray = Camera.main.ScreenPointToRay(mouse.position.ReadValue());
-        bool isNowHovered = Physics.Raycast(ray, out RaycastHit hit) &&
-                            (hit.transform == transform || hit.transform.IsChildOf(transform));
+        bool isNowHovered = Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ingredientLayer) &&
+                        (hit.transform == transform || hit.transform.IsChildOf(transform));
 
         SetHoverState(isNowHovered);
     }

@@ -3,19 +3,26 @@ using UnityEngine.InputSystem;
 
 public class DragController : MonoBehaviour
 {
-    [SerializeField] private LayerMask ignoredLayers;
-    [SerializeField] private SFXTypeEventChannel onSFXRequest; // Event channel to request sound effects
+    [SerializeField] private LayerMask ignoredLayers; // Ignore raycasts to the ingredient itself and other draggable items
+    [SerializeField] private LayerMask surfaceLayers; // Only raycast to these layers (e.g. tables, floor) to determine where to place the ingredient
+    [SerializeField] private float surfaceOffset = 0.1f; // Offset from the surface to prevent z-fighting and allow "climbing" onto tables
+    [SerializeField] private SFXTypeEventChannel onSFXRequest;
 
-    private Vector3 mOffset;
-    private float mZCoord;
     private bool isDragging = false;
     private BaseStorage currentAimedStorage;
+    private Rigidbody rb;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     void Update()
     {
         var mouse = Mouse.current;
         if (mouse == null) return;
 
+        // 1. Start dragging when left mouse button is pressed on the ingredient
         if (mouse.leftButton.wasPressedThisFrame)
         {
             Ray ray = Camera.main.ScreenPointToRay(mouse.position.ReadValue());
@@ -27,39 +34,56 @@ public class DragController : MonoBehaviour
             }
         }
 
+        // 2. Update position while dragging
         if (mouse.leftButton.isPressed && isDragging)
         {
-            transform.position = GetMouseWorldPos() + mOffset;
+            UpdatePositionOnSurface(mouse.position.ReadValue());
         }
 
-        if (mouse.leftButton.wasReleasedThisFrame)
+        // 3. Release
+        if (mouse.leftButton.wasReleasedThisFrame && isDragging)
         {
-            if (currentAimedStorage != null && !currentAimedStorage.IsFull)
-            {
-                currentAimedStorage.StoreItem(this.gameObject);
-            }
+            EndDrag();
+        }
+    }
 
-            isDragging = false;
-            onSFXRequest.Raise(SFXType.IngredientDrop);
+    private void UpdatePositionOnSurface(Vector2 mousePos)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(mousePos);
+
+        // Raycast into the scene, only hitting surfaceLayers (tables, floor)
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, surfaceLayers))
+        {
+            // Set the ingredient position to the hit point + (surface normal * offset)
+            // This allows the ingredient to "climb" onto surfaces
+            transform.position = hit.point + (hit.normal * surfaceOffset);
+
+            // If you want the ingredient to align with the surface angle (optional), you can add this line:
+            // transform.up = hit.normal;
         }
     }
 
     public void StartDrag()
     {
-        mZCoord = Camera.main.WorldToScreenPoint(transform.position).z;
-        mOffset = transform.position - GetMouseWorldPos();
         isDragging = true;
+        if (rb != null) rb.isKinematic = true; // Force disable physics while dragging
 
         if (onSFXRequest != null)
             onSFXRequest.Raise(SFXType.IngredientDrag);
-
     }
 
-    private Vector3 GetMouseWorldPos()
+    private void EndDrag()
     {
-        Vector3 mousePoint = Mouse.current.position.ReadValue();
-        mousePoint.z = mZCoord;
-        return Camera.main.ScreenToWorldPoint(mousePoint);
+        if (rb != null) rb.isKinematic = false; // Release hand to restore physics
+        if (currentAimedStorage != null && !currentAimedStorage.IsFull)
+        {
+            currentAimedStorage.StoreItem(this.gameObject);
+        }
+
+        isDragging = false;
+
+        if (onSFXRequest != null)
+            onSFXRequest.Raise(SFXType.IngredientDrop);
     }
 
     // Trigger Fridge highlight when hovering over it
