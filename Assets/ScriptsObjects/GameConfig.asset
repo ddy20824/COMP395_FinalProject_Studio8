@@ -22,6 +22,8 @@ MonoBehaviour:
   - type: 0
     prefab: {fileID: 1498797515652644912, guid: ff29d08a9a6958a4a924868b6b97d46a, type: 3}
     capacityOfBox: 6
+    sprite: {fileID: 21300000, guid: 657fe7138c97d6e41bd88cd4109ae4fa, type: 3}
   - type: 1
     prefab: {fileID: 2247471851365886193, guid: 08d7b782fa0e08640ad9ffea5c10ffda, type: 3}
     capacityOfBox: 3
+    sprite: {fileID: 21300000, guid: 7f06a67c5e8112d478012de867a7880e, type: 3}

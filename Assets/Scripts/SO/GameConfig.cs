@@ -25,4 +25,12 @@ public class IngredientMapping
     public int penaltyScore; // Score deducted from the total score after ingrediant trashed
     public GameObject prefab;
     public int capacityOfBox;
+    public Sprite sprite;
+}
+
+[System.Serializable]
+public class OrderTypeMapping
+{
+    // public OrderType type;
+    public Sprite sprite;
 }
