@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Fridge
+  - GeneralStorage
   layers:
   - Default
   - TransparentFX

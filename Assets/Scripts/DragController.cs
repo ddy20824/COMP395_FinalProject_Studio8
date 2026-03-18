@@ -76,7 +76,7 @@ public class DragController : MonoBehaviour
     private void EndDrag()
     {
         if (rb != null) rb.isKinematic = false; // Release hand to restore physics
-        if (currentAimedStorage != null && !currentAimedStorage.IsFull)
+        if (currentAimedStorage != null)
         {
             currentAimedStorage.StoreItem(this.gameObject);
         }
@@ -90,7 +90,7 @@ public class DragController : MonoBehaviour
     // Trigger Fridge highlight when hovering over it
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Fridge"))
+        if (other.CompareTag("Fridge") || other.CompareTag("GeneralStorage"))
         {
             var storage = other.GetComponentInParent<BaseStorage>();
             if (storage != null)
@@ -103,7 +103,7 @@ public class DragController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Fridge"))
+        if (other.CompareTag("Fridge") || other.CompareTag("GeneralStorage"))
         {
             var storage = other.GetComponentInParent<BaseStorage>();
             if (storage != null && currentAimedStorage == storage)
