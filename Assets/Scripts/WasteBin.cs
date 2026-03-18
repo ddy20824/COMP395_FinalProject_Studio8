@@ -2,14 +2,11 @@ using UnityEngine;
 
 public class WasteBin : MonoBehaviour
 {
-       [SerializeField] private IngredientTrashedEventChannel _onIngredientTrashed;
+       [SerializeField] private IngredientTypeEventChannel _onIngredientTrashed;
        
        // When collide with the trash can
-       private void OnTriggerEnter(Collider other)
-       {
-              // Debug.Log("Trigger hit by: " + other.name); 
-              TrashIngrediant(other);
-       }
+       private void OnTriggerEnter(Collider other) => TrashIngrediant(other);
+       
 
        private void TrashIngrediant(Collider other)
        {
@@ -17,17 +14,13 @@ public class WasteBin : MonoBehaviour
               IngredientController ingredientController = other.GetComponent<IngredientController>();
               
               // If there is no ingrediant
-              if (ingredientController == null)
-              {
-                     // Debug.Log("Ingrediant Not found");
-                     return;
-              }
+              if (ingredientController == null) return;
               
               // Fire the event
-              _onIngredientTrashed.Raise(ingredientController);
+              _onIngredientTrashed.Raise(ingredientController.GetIngredientType());
               
               //TODO: Just a log for now, UI can listen to this event for updateing the score
-              Debug.Log($"Trashed: {ingredientController.GetIngredientName()} | Penalty: {ingredientController.GetPenaltyScore()}");
+              Debug.Log($"Trashed: {ingredientController.GetIngredientType()}");
         
               // Destroy the ingredient
               Destroy(other.gameObject);

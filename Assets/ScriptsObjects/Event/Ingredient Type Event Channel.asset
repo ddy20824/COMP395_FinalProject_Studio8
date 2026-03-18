@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32d74017042fadc40a3b19426809986b, type: 3}
-  m_Name: IngredientTrashedEventChannel
-  m_EditorClassIdentifier: Assembly-CSharp::IngredientTrashedEventChannel
+  m_Script: {fileID: 11500000, guid: a1f17aa51ad249449813dab9cb57cb3b, type: 3}
+  m_Name: Ingredient Type Event Channel
+  m_EditorClassIdentifier: Assembly-CSharp::IngredientTypeEventChannel
