@@ -47,8 +47,6 @@ public class DragController : MonoBehaviour
         }
     }
 
-            isDragging = false;
-            onSFXRequest.Raise(GameplaySFXType.INGR_DROP);
     private void UpdatePositionOnSurface(Vector2 mousePos)
     {
         Ray ray = Camera.main.ScreenPointToRay(mousePos);
@@ -86,7 +84,7 @@ public class DragController : MonoBehaviour
         isDragging = false;
 
         if (onSFXRequest != null)
-            onSFXRequest.Raise(SFXType.IngredientDrop);
+            onSFXRequest.Raise(GameplaySFXType.INGR_DROP);
     }
 
     // Trigger Fridge highlight when hovering over it
