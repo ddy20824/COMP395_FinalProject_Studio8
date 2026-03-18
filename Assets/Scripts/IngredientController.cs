@@ -155,17 +155,8 @@ public class IngredientController : MonoBehaviour
         );
     }
 
-    // Trigger: detect whether the ingredient is inside the fridge area
-    // (requires a Trigger Collider on the fridge object tagged "Fridge")
-    private void OnTriggerEnter(Collider other)
+    public void SetInFridge(bool inFridge)
     {
-        if (other.CompareTag("Fridge")) isInFridge = true;
+        isInFridge = inFridge;
     }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Fridge")) isInFridge = false;
-    }
-
-
 }
