@@ -89,7 +89,7 @@ public class IngredientController : MonoBehaviour
             isRotted = true;
             Debug.Log(ingredientName + " has rotted!");
             onIngredientRotten.Raise(type);
-            onSFXRequest.Raise(SFXType.IngredientRot);
+            onSFXRequest.Raise(GameplaySFXType.INGR_ROT);
             // TODO: Somewhere need to subscribe to implement rotten logic (e.g. deduct score)
         }
     }
@@ -121,7 +121,7 @@ public class IngredientController : MonoBehaviour
         isHovered = hovered;
 
         if (isHovered)
-            onSFXRequest.Raise(SFXType.IngredientHover);
+            onSFXRequest.Raise(GameplaySFXType.INGR_HOVER);
 
         if (lifeBarRoot != null)
             lifeBarRoot.SetActive(isHovered);

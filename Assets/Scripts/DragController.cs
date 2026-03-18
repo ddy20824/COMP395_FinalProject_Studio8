@@ -69,7 +69,8 @@ public class DragController : MonoBehaviour
         if (rb != null) rb.isKinematic = true; // Force disable physics while dragging
 
         if (onSFXRequest != null)
-            onSFXRequest.Raise(SFXType.IngredientDrag);
+            onSFXRequest.Raise(GameplaySFXType.INGR_DRAG);
+
     }
 
     private void EndDrag()
@@ -83,7 +84,7 @@ public class DragController : MonoBehaviour
         isDragging = false;
 
         if (onSFXRequest != null)
-            onSFXRequest.Raise(SFXType.IngredientDrop);
+            onSFXRequest.Raise(GameplaySFXType.INGR_DROP);
     }
 
     // Trigger Fridge highlight when hovering over it

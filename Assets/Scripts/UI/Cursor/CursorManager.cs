@@ -6,8 +6,11 @@ public class CursorManager : MonoBehaviour
 
     [SerializeField] private Texture2D normalCursor;
     [SerializeField] private Texture2D pointerCursor; // For buttons
-    [SerializeField] private Texture2D grabCursor;    // For dragging ingredients
-    [SerializeField] private Vector2 hotSpot = Vector2.zero;
+    [SerializeField] private Texture2D grabCursor;    // For dragging
+
+    [SerializeField] private Vector2 normalHotspot;
+    [SerializeField] private Vector2 pointerHotspot;
+    [SerializeField] private Vector2 grabHotspot;
 
     void Awake()
     {
@@ -23,11 +26,11 @@ public class CursorManager : MonoBehaviour
         }
     }
 
-    public void SetNormalCursor() => ChangeCursor(normalCursor);
-    public void SetPointerCursor() => ChangeCursor(pointerCursor);
-    public void SetGrabCursor() => ChangeCursor(grabCursor);
+    public void SetNormalCursor() => ChangeCursor(normalCursor, normalHotspot);
+    public void SetPointerCursor() => ChangeCursor(pointerCursor, pointerHotspot);
+    public void SetGrabCursor() => ChangeCursor(grabCursor, grabHotspot);
 
-    private void ChangeCursor(Texture2D cursorTexture)
+    private void ChangeCursor(Texture2D cursorTexture, Vector2 hotSpot)
     {
         Cursor.SetCursor(cursorTexture, hotSpot, CursorMode.Auto);
     }
