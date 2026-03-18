@@ -305,6 +305,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2819131770985720812
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2322165267586309986}
+  m_Layer: 0
+  m_Name: RejectPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2322165267586309986
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2819131770985720812}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0.14, z: 1.64}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 503106297893254788}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3795688543629950955
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,8 +599,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.3698288, y: 2.807293, z: 1.0478605}
-  m_Center: {x: 0.00507915, y: 1.4093081, z: 0.023930252}
+  m_Size: {x: 1.2454672, y: 2.807293, z: 1.0478605}
+  m_Center: {x: -0.0015604496, y: 1.4093081, z: 0.023930252}
 --- !u!1 &7016012985422264751
 GameObject:
   m_ObjectHideFlags: 0
@@ -638,6 +669,7 @@ Transform:
   - {fileID: 3630084684702789268}
   - {fileID: 6691182160181850296}
   - {fileID: 8049112757997832214}
+  - {fileID: 2322165267586309986}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!65 &8951674486892909583
@@ -675,6 +707,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FridgeController
   maxCapacity: 8
   storageRoot: {fileID: 6691182160181850296}
+  rejectPoint: {fileID: 2322165267586309986}
   animator: {fileID: 8861378268127405552}
   cameraFocusChannel: {fileID: 11400000, guid: 9605dd7fe81ed904a9fda413a7c8ad4c, type: 2}
   cameraSlot: {fileID: 7241208143949909934}

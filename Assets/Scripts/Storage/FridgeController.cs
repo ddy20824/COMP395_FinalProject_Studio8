@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class FridgeController : BaseStorage
 {
@@ -26,15 +25,7 @@ public class FridgeController : BaseStorage
         selfCollider = GetComponent<Collider>();
     }
 
-    private void Update()
-    {
-        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            HandleFridgeInput(Mouse.current.position.ReadValue());
-        }
-    }
-
-    private void HandleFridgeInput(Vector2 screenPoint)
+    protected override void HandleMouseInput(Vector2 screenPoint)
     {
         if (Camera.main == null)
         {
