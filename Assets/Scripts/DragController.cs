@@ -40,7 +40,7 @@ public class DragController : MonoBehaviour
             }
 
             isDragging = false;
-            onSFXRequest.Raise(SFXType.IngredientDrop);
+            onSFXRequest.Raise(GameplaySFXType.INGR_DROP);
         }
     }
 
@@ -51,7 +51,7 @@ public class DragController : MonoBehaviour
         isDragging = true;
 
         if (onSFXRequest != null)
-            onSFXRequest.Raise(SFXType.IngredientDrag);
+            onSFXRequest.Raise(GameplaySFXType.INGR_DRAG);
 
     }
 
