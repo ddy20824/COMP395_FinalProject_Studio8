@@ -16,6 +16,8 @@ public class SoundManager : MonoBehaviour
     private AudioSource gameplaySource;
     [SerializeField] private float gameplayVolume = 0.7f;
 
+    [SerializeField] private SFXTypeEventChannel sfxEventChannel;
+
     public static SoundManager Instance { get => instance; set => instance = value; }
 
     private void Awake()
@@ -37,14 +39,17 @@ public class SoundManager : MonoBehaviour
     private void OnEnable()
     {
         SceneManager.sceneLoaded += HandleBGM_OnSceneLoad;
-
+        sfxEventChannel.Subscribe(TriggerGameplaySound);
     }
 
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= HandleBGM_OnSceneLoad;
+        sfxEventChannel.Unsubscribe(TriggerGameplaySound);
     }
+
     /* Private action members */
+    // === UI SFX Section ===
     private void PlayUISound(UISFXType type)
     {
         if (Instance == null) return;
@@ -92,6 +97,13 @@ public class SoundManager : MonoBehaviour
     {
         StopBGM();
         PlayBGM();
+    }
+
+    // === Gameplay SFX Section ===
+    private void TriggerGameplaySound(GameplaySFXType type)
+    {
+        AudioClip clip = Instance.gameplayClips[(int)type];
+        Instance.gameplaySource.PlayOneShot(clip, gameplayVolume);
     }
 
     /* Public action members */

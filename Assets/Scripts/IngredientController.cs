@@ -121,7 +121,7 @@ public class IngredientController : MonoBehaviour
         isHovered = hovered;
 
         if (isHovered)
-            onSFXRequest.Raise(GameplaySFXType.INGR_HOVER);
+            onSFXRequest.Raise(GameplaySFXType.ingr_hover);
 
         if (lifeBarRoot != null)
             lifeBarRoot.SetActive(isHovered);

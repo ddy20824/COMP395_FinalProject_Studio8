@@ -2787,6 +2787,10 @@ PrefabInstance:
       propertyPath: maxCapacity
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5597804966472494738, guid: 024d7cadf49fda6468b34d20cc047799, type: 3}
+      propertyPath: onSFXRequest
+      value: 
+      objectReference: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
     - target: {fileID: 7016012985422264751, guid: 024d7cadf49fda6468b34d20cc047799, type: 3}
       propertyPath: m_Layer
       value: 8
