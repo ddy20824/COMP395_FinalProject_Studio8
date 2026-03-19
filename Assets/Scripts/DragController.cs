@@ -71,6 +71,7 @@ public class DragController : MonoBehaviour
         if (onSFXRequest != null)
             onSFXRequest.Raise(GameplaySFXType.INGR_DRAG);
 
+        CursorManager.Instance.SetGrabCursor();
     }
 
     private void EndDrag()
@@ -85,6 +86,8 @@ public class DragController : MonoBehaviour
 
         if (onSFXRequest != null)
             onSFXRequest.Raise(GameplaySFXType.INGR_DROP);
+
+        CursorManager.Instance.SetNormalCursor();
     }
 
     // Trigger Fridge highlight when hovering over it
