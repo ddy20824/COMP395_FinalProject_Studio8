@@ -4,11 +4,11 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(AudioSource))]
 public class SoundManager : MonoBehaviour
 {
-    [SerializeField] private AudioClip[] uiClips;
-    [SerializeField] private AudioClip[] gameplayClips;
-
     private static SoundManager instance;
 
+    [Header("SFX Resources")]
+    [SerializeField] private AudioClip[] uiClips;
+    [SerializeField] private AudioClip[] gameplayClips;
     private AudioSource bgmSource;
     [SerializeField] private float bgmVolume = 0.5f;
     private AudioSource uiSource;
@@ -16,6 +16,7 @@ public class SoundManager : MonoBehaviour
     private AudioSource gameplaySource;
     [SerializeField] private float gameplayVolume = 0.7f;
 
+    [Header("Events")]
     [SerializeField] private SFXTypeEventChannel sfxEventChannel;
 
     public static SoundManager Instance { get => instance; set => instance = value; }
