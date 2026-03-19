@@ -19,7 +19,7 @@ public class SoundManager : MonoBehaviour
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel sfxEventChannel;
 
-    public static SoundManager Instance { get => instance; set => instance = value; }
+    public static SoundManager Instance { get => instance; private set => instance = value; }
 
     private void Awake()
     {
