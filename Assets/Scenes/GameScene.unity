@@ -2003,6 +2003,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7319376075670544716, guid: f43818c9cb19fac4fa43f52d4a211840, type: 3}
+      propertyPath: onSFXRequest
+      value: 
+      objectReference: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
+    - target: {fileID: 7319376075670544716, guid: f43818c9cb19fac4fa43f52d4a211840, type: 3}
+      propertyPath: _onIngredientTrashed
+      value: 
+      objectReference: {fileID: 11400000, guid: c519c075d97ecea4e92b9dacd09ff097, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
