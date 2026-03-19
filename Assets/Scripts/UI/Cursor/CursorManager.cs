@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class CursorManager : MonoBehaviour
 {
-    public static CursorManager Instance { get; private set; }
+    private static CursorManager instance;
+    public static CursorManager Instance { get => instance; private set => instance = value; }
 
     [SerializeField] private Texture2D normalCursor;
     [SerializeField] private Texture2D pointerCursor; // For buttons
@@ -14,16 +15,15 @@ public class CursorManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            SetNormalCursor();
-        }
-        else
+        if (instance != null && instance != this)
         {
             Destroy(gameObject);
+            return;
         }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+        SetNormalCursor();
     }
 
     public void SetNormalCursor() => ChangeCursor(normalCursor, normalHotspot);
