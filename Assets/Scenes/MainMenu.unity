@@ -466,10 +466,25 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 23075334929ee59488267875bfe290af, type: 3}
   - {fileID: 8300000, guid: e9202d77b8b4adf4b8010c754172164b, type: 3}
   - {fileID: 8300000, guid: c8d5653f5eaa6b3488a5e032a72a70d7, type: 3}
-  gameplayClips: []
-  bgmVolume: 0.5
+  gameplayClips:
+  - {fileID: 8300000, guid: f212b16ca737d1c459b7b5336794c871, type: 3}
+  - {fileID: 8300000, guid: bb4dc1eb3701e354785237ceef6a6153, type: 3}
+  - {fileID: 0}
+  - {fileID: 8300000, guid: 0f0c9394913d13c41b5f4b2911115115, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 8300000, guid: 3a4e8d5e0ea206e47b83733841b6b7f2, type: 3}
+  - {fileID: 8300000, guid: af5677f3585b6994f87b32c8d1c5dd6e, type: 3}
+  - {fileID: 0}
+  - {fileID: 8300000, guid: c6a425bde905cf84fa30e260815b875d, type: 3}
+  - {fileID: 8300000, guid: cdb54f7f9bde9794c8c5c0c5c65597af, type: 3}
+  - {fileID: 8300000, guid: 832a0372e14bfb2469c45751f14b0ce1, type: 3}
+  - {fileID: 8300000, guid: de607facfd7f1104fad309932fd8519b, type: 3}
+  - {fileID: 8300000, guid: 4a028ad734bcd274e8402e564bfe1348, type: 3}
+  bgmVolume: 0.1
   uiVolume: 1
-  gameplayVolume: 0.7
+  gameplayVolume: 1
+  sfxEventChannel: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
 --- !u!82 &623608529
 AudioSource:
   m_ObjectHideFlags: 0

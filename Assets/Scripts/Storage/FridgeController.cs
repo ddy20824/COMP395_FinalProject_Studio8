@@ -17,6 +17,9 @@ public class FridgeController : BaseStorage
     [SerializeField] private int columns = 3;
     [SerializeField] private Transform explodeOrigin;
 
+    [Header("Events")]
+    [SerializeField] private SFXTypeEventChannel onSFXRequest;
+
     private Collider selfCollider;
     private bool isOpen = false;
 
@@ -61,10 +64,12 @@ public class FridgeController : BaseStorage
 
         if (isOpen)
         {
+            onSFXRequest.Raise(GameplaySFXType.FRIDGE_OPEN);
             StartCoroutine(DelayedShowExplodedView(0.5f));
         }
         else
         {
+            onSFXRequest.Raise(GameplaySFXType.FRIDGE_CLOSE);
             HideExplodedView();
             ToggleHighlight(false);
         }
