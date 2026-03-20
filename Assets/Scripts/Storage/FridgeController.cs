@@ -20,7 +20,16 @@ public class FridgeController : BaseStorage
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
 
+
+    public int levelIndex = 0;
+
     private bool isOpen = false;
+
+    void Awake()
+    {
+        LevelDataContent levelData = gameConfig.allLevels[levelIndex];
+        maxCapacity = levelData.capacityOfFridge;
+    }
 
     protected override void HandleMouseInput(Vector2 screenPoint)
     {

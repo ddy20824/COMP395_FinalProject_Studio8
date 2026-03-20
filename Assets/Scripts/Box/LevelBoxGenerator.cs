@@ -85,7 +85,7 @@ public class LevelBoxGenerator : MonoBehaviour
         BoxInteraction interaction = box.GetComponent<BoxInteraction>();
         if (interaction != null)
         {
-            interaction.ConfigureBoxContents(mapping.prefab, mapping.capacityOfBox);
+            interaction.ConfigureBoxContents(mapping.prefab, gameConfig.capacityOfBox);
         }
 
         var glowEffect = Instantiate(glowEffectPrefab, spawnPoints[index].position, Quaternion.identity);

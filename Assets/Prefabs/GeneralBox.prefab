@@ -376,9 +376,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b6c14b45c1e85546b4b0dd0883ccfa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GeneralStorageController
-  maxCapacity: 8
   storageRoot: {fileID: 5814467991830113100}
   rejectPoint: {fileID: 1207136732430379436}
+  gameConfig: {fileID: 11400000, guid: fae987cbdb15f8846b04294df40aa348, type: 2}
 --- !u!1 &4183175518472487710
 GameObject:
   m_ObjectHideFlags: 0
