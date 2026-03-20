@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 542106224990984246}
   - component: {fileID: 8006636497276826386}
   - component: {fileID: 100482779164121276}
+  - component: {fileID: 1056985673547998712}
   m_Layer: 8
   m_Name: WoodenBox
   m_TagString: Untagged
@@ -144,6 +145,24 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5720362064503988618, guid: c0a7eea11c000d54d8db91bafda2c7d8, type: 3}
+--- !u!114 &1056985673547998712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 738477419776083541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 1, g: 0.8, b: 0.20784314, a: 1}
+  outlineWidth: 4.77
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &1440532204973668493
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,8 +267,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.22110403, y: 0.64026177, z: 1.7883375}
-  m_Center: {x: 0.79509634, y: 0.29150423, z: 0.00020337105}
+  m_Size: {x: 0.1605708, y: 0.64026177, z: 1.7883375}
+  m_Center: {x: 0.8253612, y: 0.29150447, z: 0.00020337105}
 --- !u!1 &2882392099873312533
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,10 +379,6 @@ MonoBehaviour:
   maxCapacity: 8
   storageRoot: {fileID: 5814467991830113100}
   rejectPoint: {fileID: 1207136732430379436}
-  columns: 3
-  spacingX: 0.4
-  spacingZ: 0.4
-  startPos: {fileID: 3223784469002011636}
 --- !u!1 &4183175518472487710
 GameObject:
   m_ObjectHideFlags: 0

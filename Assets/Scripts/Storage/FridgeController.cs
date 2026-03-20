@@ -20,13 +20,7 @@ public class FridgeController : BaseStorage
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
 
-    private Collider selfCollider;
     private bool isOpen = false;
-
-    void Start()
-    {
-        selfCollider = GetComponent<Collider>();
-    }
 
     protected override void HandleMouseInput(Vector2 screenPoint)
     {
