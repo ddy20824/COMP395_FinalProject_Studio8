@@ -852,9 +852,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 153984ba107f0e24a891cd7da1eade73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FridgeController
-  maxCapacity: 1
   storageRoot: {fileID: 6691182160181850296}
   rejectPoint: {fileID: 2322165267586309986}
+  gameConfig: {fileID: 11400000, guid: fae987cbdb15f8846b04294df40aa348, type: 2}
   animator: {fileID: 8861378268127405552}
   cameraFocusChannel: {fileID: 11400000, guid: 9605dd7fe81ed904a9fda413a7c8ad4c, type: 2}
   cameraSlot: {fileID: 7241208143949909934}
@@ -862,6 +862,7 @@ MonoBehaviour:
   columns: 3
   explodeOrigin: {fileID: 3630084684702789268}
   onSFXRequest: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
+  levelIndex: 0
 --- !u!1 &7567082411260545416
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,15 +6,17 @@ using UnityEngine.InputSystem;
 public abstract class BaseStorage : MonoBehaviour
 {
     [Header("Storage Settings")]
-    public int maxCapacity = 8;
-    public Transform storageRoot;
+    [SerializeField] protected Transform storageRoot;
     [SerializeField] protected Transform rejectPoint;
+    [SerializeField] protected GameConfig gameConfig;
 
 
+    protected int maxCapacity;
     protected List<GameObject> storedItems = new List<GameObject>();
-    public bool IsFull => storedItems.Count >= maxCapacity;
+    protected bool IsFull => storedItems.Count >= maxCapacity;
 
     protected Collider selfCollider;
+
     void Start()
     {
         selfCollider = GetComponent<Collider>();

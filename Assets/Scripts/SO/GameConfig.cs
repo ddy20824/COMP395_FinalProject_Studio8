@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GameConfig", menuName = "Scriptable Objects/GameConfig")]
 public class GameConfig : ScriptableObject
 {
+    public int capacityOfBox;
     public List<LevelDataContent> allLevels = new List<LevelDataContent>();
     public List<IngredientMapping> ingredientMappings = new List<IngredientMapping>();
 }
@@ -16,6 +17,8 @@ public class LevelDataContent
     public List<IngredientType> availableIngredients;
     public float orderSpawnRate;
     public bool hasPowerOutageEvent;
+
+    public int capacityOfFridge;
 }
 
 [System.Serializable]
@@ -24,7 +27,6 @@ public class IngredientMapping
     public IngredientType type;
     public int penaltyScore; // Score deducted from the total score after ingrediant trashed
     public GameObject prefab;
-    public int capacityOfBox;
     public Sprite sprite;
 }
 

@@ -2,6 +2,11 @@ using UnityEngine;
 
 public class GeneralStorageController : BaseStorage
 {
+    void Awake()
+    {
+        maxCapacity = gameConfig.capacityOfBox;
+    }
+
     protected override void HandleMouseInput(Vector2 screenPoint)
     {
         if (Camera.main == null)
