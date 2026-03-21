@@ -481,6 +481,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 832a0372e14bfb2469c45751f14b0ce1, type: 3}
   - {fileID: 8300000, guid: de607facfd7f1104fad309932fd8519b, type: 3}
   - {fileID: 8300000, guid: 4a028ad734bcd274e8402e564bfe1348, type: 3}
+  - {fileID: 8300000, guid: 6603ac47cec0cb74c88b053f53d62ff2, type: 3}
   bgmVolume: 0.1
   uiVolume: 1
   gameplayVolume: 1
@@ -1125,9 +1126,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1f7c0a67e68cc2428cb452a6cb29510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CursorManager
-  normalCursor: {fileID: 2800000, guid: 5e9616fa37ef79b458edf253fa5f04e1, type: 3}
+  normalCursor: {fileID: 2800000, guid: f171a0a8bd9d13f4d9319415702db368, type: 3}
   pointerCursor: {fileID: 2800000, guid: 35d7821ed2e8dcd4da0875568507e416, type: 3}
-  grabCursor: {fileID: 2800000, guid: f19340828d524214187a2b4132dd3b16, type: 3}
+  grabCursor: {fileID: 2800000, guid: 5a8288e6364af0445b1a1df956af42f0, type: 3}
   normalHotspot: {x: 32, y: 32}
   pointerHotspot: {x: 15, y: 0}
   grabHotspot: {x: 32, y: 32}
