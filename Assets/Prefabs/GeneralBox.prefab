@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 8006636497276826386}
   - component: {fileID: 100482779164121276}
   - component: {fileID: 1056985673547998712}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: WoodenBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,7 +173,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3203221009208939359}
   - component: {fileID: 3104259313080921562}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Collider (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,7 +226,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2380484211730517879}
   - component: {fileID: 8756826160529354145}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -279,7 +279,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2101213008607658046}
   - component: {fileID: 1537184801761589046}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Collider (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -332,7 +332,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4321791151259765820}
   - component: {fileID: 5821753028277384396}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GeneralBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -389,7 +389,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4814237765334320438}
   - component: {fileID: 5593888491351433320}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Collider (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -504,7 +504,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2864159481154517055}
   - component: {fileID: 8698854254366127206}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Trigger
   m_TagString: GeneralStorage
   m_Icon: {fileID: 0}
@@ -557,7 +557,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3789637627340442664}
   - component: {fileID: 2859852016388417329}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Collider (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
