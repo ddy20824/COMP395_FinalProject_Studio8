@@ -531,7 +531,7 @@ Transform:
   m_GameObject: {fileID: 450371069}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.25, y: 0.3, z: 4.2}
+  m_LocalPosition: {x: 0.37, y: 0.3, z: 3.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2743,7 +2743,7 @@ Transform:
   m_GameObject: {fileID: 1920393051}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.45, y: 0.3, z: 4.2}
+  m_LocalPosition: {x: 1.45, y: 0.3, z: 3.97}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2930,7 +2930,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelBoxGenerator
   gameConfig: {fileID: 11400000, guid: fae987cbdb15f8846b04294df40aa348, type: 2}
-  levelIndex: 0
   boxPrefab: {fileID: 2875536377531072025, guid: c870b8c0c1ed7d641ac62c6466ae0ad3, type: 3}
   glowEffectPrefab: {fileID: 4412402386798065797, guid: 7c2325f8db2e3524696f392d61a5f040, type: 3}
   spawnPoints:
@@ -3030,7 +3029,7 @@ Transform:
   m_GameObject: {fileID: 2025912858}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.25, y: 0.3, z: 2.7}
+  m_LocalPosition: {x: 0.37, y: 0.3, z: 2.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
