@@ -26,6 +26,8 @@ public class BoxInteraction : MonoBehaviour
     private bool hasOpened;
     private Coroutine spawnDelayCoroutine;
 
+    [Header("Events")]
+    [SerializeField] private SFXTypeEventChannel onSFXRequest;
     private void Awake()
     {
         selfCollider = GetComponent<Collider>();
@@ -69,6 +71,7 @@ public class BoxInteraction : MonoBehaviour
             if (openedBox != null)
             {
                 openedBox.SetActive(true);
+                onSFXRequest.Raise(GameplaySFXType.UNBOX);
             }
 
             if (closedBox != null)
@@ -82,6 +85,7 @@ public class BoxInteraction : MonoBehaviour
         if (!HasObjectInsideBoxVolume())
         {
             Destroy(gameObject);
+            onSFXRequest.Raise(GameplaySFXType.TRASH_INTO);
         }
     }
 

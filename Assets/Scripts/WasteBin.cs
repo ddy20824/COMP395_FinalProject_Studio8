@@ -21,6 +21,7 @@ public class WasteBin : MonoBehaviour
         // Fire the event
         _onIngredientTrashed.Raise(ingredientController.GetIngredientType());
         onSFXRequest.Raise(GameplaySFXType.TRASH_INTO);
+        CursorManager.Instance.SetNormalCursor();
 
         //TODO: Just a log for now, UI can listen to this event for updateing the score
         Debug.Log($"Trashed: {ingredientController.GetIngredientType()}");

@@ -247,6 +247,7 @@ MonoBehaviour:
   boxInsideCheckLayer:
     serializedVersion: 2
     m_Bits: 128
+  onSFXRequest: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
 --- !u!1 &5076848512465422755
 GameObject:
   m_ObjectHideFlags: 0
