@@ -93,6 +93,8 @@ public class DragController : MonoBehaviour
     // Trigger Fridge highlight when hovering over it
     private void OnTriggerEnter(Collider other)
     {
+        if (!isDragging) return;
+
         if (other.CompareTag("Fridge") || other.CompareTag("GeneralStorage"))
         {
             var storage = other.GetComponentInParent<BaseStorage>();
@@ -106,6 +108,8 @@ public class DragController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (!isDragging) return;
+
         if (other.CompareTag("Fridge") || other.CompareTag("GeneralStorage"))
         {
             var storage = other.GetComponentInParent<BaseStorage>();
