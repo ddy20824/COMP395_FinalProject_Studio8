@@ -23,7 +23,16 @@ public class OrderUIController : MonoBehaviour
         foreach (Transform child in ingredientContainer) Destroy(child.gameObject);
 
         // 3. generate new ingredient icons with proper spacing and random rotation for a "messy" look
-        float spacing = 0.25f;
+        float maxRowWidth = 0.35f;  // paper width for ingredient icons, adjust as needed
+        float idealSpacing = 0.25f; // ideal spacing between icons when there are only a few ingredients
+
+        // calculate spacing based on the number of ingredients, but cap it to maxRowWidth to prevent overflow
+        float spacing = 0f;
+        if (ingredientDatas.Count > 1)
+        {
+            spacing = Mathf.Min(idealSpacing, maxRowWidth / (ingredientDatas.Count - 1));
+        }
+
         for (int i = 0; i < ingredientDatas.Count; i++)
         {
             GameObject iconObj = Instantiate(spritePrefab, ingredientContainer);
