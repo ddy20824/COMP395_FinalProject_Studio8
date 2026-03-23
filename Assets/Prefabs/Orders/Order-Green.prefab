@@ -30,7 +30,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5108345293018584614, guid: a6e87a5d4530a364892df2dd6503aac5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.02700001
+      value: -0.017
       objectReference: {fileID: 0}
     - target: {fileID: 5108345293018584614, guid: a6e87a5d4530a364892df2dd6503aac5, type: 3}
       propertyPath: m_LocalRotation.w
@@ -140,7 +140,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7113728789331491570, guid: 22d8c6019a3d5304196bb7b0084a9dce, type: 3}
       propertyPath: m_Name
-      value: Order Variant
+      value: Order-Green
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

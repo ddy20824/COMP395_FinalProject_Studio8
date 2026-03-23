@@ -10,12 +10,13 @@ public class IngredientController : MonoBehaviour
     [SerializeField] private int capacity; // For bulk items, represents quantity; for others, it's 1
     [SerializeField] private float maxLifeTime = 20f;      // Total lifespan in seconds
     [SerializeField] private float decayRateInFridge = 0.2f; // Decay rate multiplier when in fridge
-    
+
 
     [Header("Life Bar UI")]
     [SerializeField] private GameObject lifeBarRoot;  // Root Canvas/GameObject to show/hide
     [SerializeField] private Image lifeBarFill;       // The fill Image (Filled type)
     [SerializeField] private bool faceCamera = true;  // Keep life bar readable in 3D by billboard behavior
+    [SerializeField] private float lifeBarHeightOffset = 0.5f; // offset above the ingredient
 
     [Header("Hover Feedback")]
     [SerializeField] private LayerMask ingredientLayer;
@@ -44,7 +45,7 @@ public class IngredientController : MonoBehaviour
     void Start()
     {
         currentLife = maxLifeTime;
-        foodMaterial = GetComponent<Renderer>().material;
+        foodMaterial = GetComponentInChildren<Renderer>().material;
         originalScale = transform.localScale;
 
         if (foodMaterial != null)
@@ -121,7 +122,7 @@ public class IngredientController : MonoBehaviour
         isHovered = hovered;
 
         if (isHovered)
-            onSFXRequest.Raise(GameplaySFXType.INGR_HOVER);
+            onSFXRequest.Raise(GameplaySFXType.ingr_hover);
 
         if (lifeBarRoot != null)
             lifeBarRoot.SetActive(isHovered);
@@ -150,7 +151,10 @@ public class IngredientController : MonoBehaviour
         Transform barTransform = lifeBarRoot.transform;
         Transform camTransform = Camera.main.transform;
 
-        // Match camera orientation so the world-space UI is always readable.
+        // 1. Keep it above the ingredient
+        barTransform.position = transform.position + Vector3.up * lifeBarHeightOffset;
+
+        // 2. Face the camera
         barTransform.LookAt(
             barTransform.position + camTransform.rotation * Vector3.forward,
             camTransform.rotation * Vector3.up

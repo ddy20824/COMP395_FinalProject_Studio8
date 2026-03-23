@@ -6,16 +6,26 @@ using UnityEngine.InputSystem;
 public abstract class BaseStorage : MonoBehaviour
 {
     [Header("Storage Settings")]
-    public int maxCapacity = 8;
-    public Transform storageRoot;
+    [SerializeField] protected Transform storageRoot;
     [SerializeField] protected Transform rejectPoint;
+    [SerializeField] protected GameConfig gameConfig;
 
 
+    protected int maxCapacity;
     protected List<GameObject> storedItems = new List<GameObject>();
-    public bool IsFull => storedItems.Count >= maxCapacity;
+    protected bool IsFull => storedItems.Count >= maxCapacity;
 
-    // [SerializeField] protected MeshRenderer outlineRenderer;
+    protected Collider selfCollider;
 
+    protected virtual void Start()
+    {
+        selfCollider = GetComponent<Collider>();
+        Outline outline = GetComponentInChildren<Outline>();
+        if (outline != null)
+        {
+            outline.enabled = false;
+        }
+    }
     private void Update()
     {
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
@@ -28,14 +38,18 @@ public abstract class BaseStorage : MonoBehaviour
     {
         Debug.Log($"{name} ToggleHighlight: {show}");
 
-        // TODO: Implement visual feedback for highlighting, e.g. by enabling an outline shader, changing material color, or showing a UI indicator. The actual implementation will depend on the art assets and design of the game.
-        // if (outlineRenderer == null) return;
-        // outlineRenderer.material.SetInt("_IsOutlineEnabled", show ? 1 : 0);
+        Outline outline = GetComponentInChildren<Outline>();
+        if (outline != null)
+        {
+            outline.enabled = show;
+            outline.OutlineWidth = 10f;
+        }
     }
 
 
     public virtual bool StoreItem(GameObject item)
     {
+        ToggleHighlight(false);
         if (IsFull)
         {
             Debug.Log($"{name} is full！");
@@ -49,7 +63,6 @@ public abstract class BaseStorage : MonoBehaviour
 
         OnItemStored(item);
 
-        ToggleHighlight(false);
         return true;
     }
 

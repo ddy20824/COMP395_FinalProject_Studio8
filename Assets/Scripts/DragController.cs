@@ -71,6 +71,7 @@ public class DragController : MonoBehaviour
         if (onSFXRequest != null)
             onSFXRequest.Raise(GameplaySFXType.INGR_DRAG);
 
+        CursorManager.Instance.SetGrabCursor();
     }
 
     private void EndDrag()
@@ -85,11 +86,15 @@ public class DragController : MonoBehaviour
 
         if (onSFXRequest != null)
             onSFXRequest.Raise(GameplaySFXType.INGR_DROP);
+
+        CursorManager.Instance.SetNormalCursor();
     }
 
     // Trigger Fridge highlight when hovering over it
     private void OnTriggerEnter(Collider other)
     {
+        if (!isDragging) return;
+
         if (other.CompareTag("Fridge") || other.CompareTag("GeneralStorage"))
         {
             var storage = other.GetComponentInParent<BaseStorage>();
@@ -103,13 +108,16 @@ public class DragController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (!isDragging) return;
+
         if (other.CompareTag("Fridge") || other.CompareTag("GeneralStorage"))
         {
             var storage = other.GetComponentInParent<BaseStorage>();
-            if (storage != null && currentAimedStorage == storage)
+            if (storage != null)
             {
                 storage.ToggleHighlight(false);
-                currentAimedStorage = null;
+                if (currentAimedStorage == storage)
+                    currentAimedStorage = null;
             }
         }
     }

@@ -12,18 +12,85 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3a5565090f9c0e46b814133ff9ebbc3, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: Assembly-CSharp::GameConfig
+  capacityOfBox: 4
   allLevels:
-  - levelName: Level1
-    timeLimit: 180
-    availableIngredients: 0000000001000000
+  - levelName: 0
+    timeLimit: 90
+    availableIngredients: 02000000
+    availableDishes: 00000000
     orderSpawnRate: 10
+    maxOrderNumber: 3
+    initailOrderNumber: 2
     hasPowerOutageEvent: 0
+    capacityOfFridge: 4
+    panNumber: 1
+  - levelName: 1
+    timeLimit: 150
+    availableIngredients: 020000000300000000000000
+    availableDishes: 000000000100000002000000
+    orderSpawnRate: 8
+    maxOrderNumber: 5
+    initailOrderNumber: 3
+    hasPowerOutageEvent: 0
+    capacityOfFridge: 6
+    panNumber: 2
+  - levelName: 2
+    timeLimit: 180
+    availableIngredients: 02000000000000000300000001000000
+    availableDishes: 00000000010000000200000003000000
+    orderSpawnRate: 6
+    maxOrderNumber: 6
+    initailOrderNumber: 4
+    hasPowerOutageEvent: 0
+    capacityOfFridge: 8
+    panNumber: 2
   ingredientMappings:
   - type: 0
+    penaltyScore: 0
     prefab: {fileID: 1498797515652644912, guid: ff29d08a9a6958a4a924868b6b97d46a, type: 3}
-    capacityOfBox: 6
     sprite: {fileID: 21300000, guid: 657fe7138c97d6e41bd88cd4109ae4fa, type: 3}
+    iconScale: 0.1
   - type: 1
+    penaltyScore: 0
     prefab: {fileID: 2247471851365886193, guid: 08d7b782fa0e08640ad9ffea5c10ffda, type: 3}
-    capacityOfBox: 3
     sprite: {fileID: 21300000, guid: 7f06a67c5e8112d478012de867a7880e, type: 3}
+    iconScale: 0.04
+  - type: 2
+    penaltyScore: 0
+    prefab: {fileID: 3583665068364657818, guid: 63d66d4a9837bc145a4af74cd7f99b89, type: 3}
+    sprite: {fileID: 21300000, guid: aba94962ccb24e545b3f468e801423e6, type: 3}
+    iconScale: 0.04
+  - type: 3
+    penaltyScore: 0
+    prefab: {fileID: 218370741152978480, guid: 0bee35ed42125a54dada38176062c160, type: 3}
+    sprite: {fileID: 21300000, guid: 7ee5b8e92803b914580930c26da2a9c7, type: 3}
+    iconScale: 0.04
+  dishTypeMappings:
+  - type: 0
+    prefab: {fileID: 7597759430774665458, guid: b0e60ba9ea8a5ee45987413b79cff7ad, type: 3}
+    sprite: {fileID: 21300000, guid: ebd0c9539045d1045b35a663a46c041b, type: 3}
+    iconScale: 0.17
+    scoreValue: 10
+    requiredIngredients: 02000000
+    cookingTime: 4
+  - type: 1
+    prefab: {fileID: 6588042903143287924, guid: 82fa9b87ecf9cb2418fea94da29fba56, type: 3}
+    sprite: {fileID: 21300000, guid: 83bb46a27aa64ed4d8cda07c543bb0c2, type: 3}
+    iconScale: 0.17
+    scoreValue: 10
+    requiredIngredients: 0000000003000000
+    cookingTime: 6
+  - type: 2
+    prefab: {fileID: 6588042903143287924, guid: 82fa9b87ecf9cb2418fea94da29fba56, type: 3}
+    sprite: {fileID: 21300000, guid: ddc8982ebe0d58946877c0a883257dd9, type: 3}
+    iconScale: 0.17
+    scoreValue: 10
+    requiredIngredients: 0200000003000000
+    cookingTime: 6
+  - type: 3
+    prefab: {fileID: 6588042903143287924, guid: 82fa9b87ecf9cb2418fea94da29fba56, type: 3}
+    sprite: {fileID: 21300000, guid: 223200576ef46c1429f4801d4aac54c6, type: 3}
+    iconScale: 0.17
+    scoreValue: 10
+    requiredIngredients: 020000000300000001000000
+    cookingTime: 8
