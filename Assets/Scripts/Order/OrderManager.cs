@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class OrderManager : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class OrderManager : MonoBehaviour
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
 
+    [Header("Camera Focus")]
+    [SerializeField] private CameraFocusEventChannel cameraFocusChannel;
+    [SerializeField] private Transform cameraSlot;
 
     [Header("Current Status")]
     private GameObject[] activeOrders;
@@ -23,6 +27,7 @@ public class OrderManager : MonoBehaviour
     private float orderSpawnRate;
     private float orderSpawnTimer;
     private int currentOrderCount;
+    private bool isFocus = false;
 
     void Start()
     {
@@ -52,6 +57,12 @@ public class OrderManager : MonoBehaviour
 
     void Update()
     {
+        // Handle mouse input for order interactions (if needed)
+        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            HandleMouseInput(Mouse.current.position.ReadValue());
+        }
+
         // Only try to spawn new orders if we haven't reached the maximum limit
         if (currentOrderCount < maxOrderCount)
         {
@@ -204,5 +215,35 @@ public class OrderManager : MonoBehaviour
             }
         }
         return -1;
+    }
+
+    private void HandleMouseInput(Vector2 screenPoint)
+    {
+        if (Camera.main == null)
+        {
+            return;
+        }
+
+        Ray ray = Camera.main.ScreenPointToRay(screenPoint);
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            if (hit.transform == transform || hit.transform.IsChildOf(transform))
+            {
+                ToggleFocus();
+            }
+        }
+    }
+
+    public void ToggleFocus()
+    {
+        isFocus = !isFocus;
+
+        CameraFocusData data = new CameraFocusData
+        {
+            targetTransform = cameraSlot,
+            isFocusing = isFocus
+        };
+
+        cameraFocusChannel.Raise(data);
     }
 }
