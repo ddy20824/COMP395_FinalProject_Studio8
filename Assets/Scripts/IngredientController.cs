@@ -41,6 +41,7 @@ public class IngredientController : MonoBehaviour
     public string GetIngredientName() => ingredientName;
     public IngredientType GetIngredientType() => type;
     public int GetCapacity() => capacity;
+    public bool IsRotted() => isRotted;
 
     void Start()
     {

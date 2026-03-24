@@ -8,8 +8,14 @@ public class OrderManager : MonoBehaviour
     public List<GameObject> orderBasePrefabs; // selectable order base prefabs for different visual styles
     public List<Transform> spawnPoints;
 
+    [Header("Events")]
+    [SerializeField] private SFXTypeEventChannel onSFXRequest;
+
+
     [Header("Current Status")]
     private GameObject[] activeOrders;
+    private DishType[] activeDishTypes;
+
     private List<DishType> availableDishes = new List<DishType>();
     private Level currentLevelIndex;
     private int initialOrderCount;
@@ -23,6 +29,7 @@ public class OrderManager : MonoBehaviour
         // Initialize level-specific settings
         currentLevelIndex = GameSession.CurrentLevelIndex;
         LevelDataContent levelData = gameConfig.allLevels.Find(l => l.levelName == currentLevelIndex);
+
         availableDishes = new List<DishType>(levelData.availableDishes);
         initialOrderCount = levelData.initailOrderNumber;
         maxOrderCount = levelData.maxOrderNumber;
@@ -33,6 +40,7 @@ public class OrderManager : MonoBehaviour
 
         // Initialize the activeOrders array based on the maxOrderCount
         activeOrders = new GameObject[maxOrderCount];
+        activeDishTypes = new DishType[maxOrderCount];
         currentOrderCount = 0;
 
         // Spawn initial orders at the start of the level
@@ -58,7 +66,7 @@ public class OrderManager : MonoBehaviour
 
     public void CreateNewOrder(DishType type)
     {
-        // 1. Findq the first empty slot in activeOrders
+        // 1. Find the first empty slot in activeOrders
         int spawnIndex = -1;
         for (int i = 0; i < activeOrders.Length; i++)
         {
@@ -94,6 +102,7 @@ public class OrderManager : MonoBehaviour
         GameObject newOrder = Instantiate(randomPrefab, targetSpot.position, targetSpot.rotation);
 
         activeOrders[spawnIndex] = newOrder;
+        activeDishTypes[spawnIndex] = type;
         currentOrderCount++;
         Debug.Log($"New order created at position {spawnIndex} for dish {type}. Current order count: {currentOrderCount}");
 
@@ -111,8 +120,89 @@ public class OrderManager : MonoBehaviour
         {
             Destroy(activeOrders[index]);
             activeOrders[index] = null; // Clear the record, the slot becomes empty again
+            activeDishTypes[index] = default; // Clear the dish type
             currentOrderCount--;
+            onSFXRequest.Raise(GameplaySFXType.ORDER_SUBMIT); // Play order completion sound effect
             Debug.Log($"Position {index} order has been completed and removed. Current order count: {currentOrderCount}");
         }
+    }
+
+    // Check if the current ingredients in the pan match any active order
+    public bool CheckMatchAndReserve(List<IngredientMapping> currentIngredients, out DishTypeMapping matchedDish, out int targetOrderIndex)
+    {
+        matchedDish = null;
+        targetOrderIndex = -1;
+
+        List<IngredientType> panIngredients = new List<IngredientType>();
+        foreach (var map in currentIngredients)
+        {
+            panIngredients.Add(map.type);
+        }
+
+        // Iterate through active orders and check for a match
+        for (int i = 0; i < activeOrders.Length; i++)
+        {
+            if (activeOrders[i] != null)
+            {
+                DishType neededType = activeDishTypes[i];
+                DishTypeMapping dishMapping = gameConfig.dishTypeMappings.Find(d => d.type == neededType);
+
+                if (dishMapping != null)
+                {
+                    // Check if the ingredients match (ignoring order)
+                    if (AreIngredientsEqual(panIngredients, dishMapping.requiredIngredients))
+                    {
+                        matchedDish = dishMapping;
+                        targetOrderIndex = i;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // No match found
+        return false;
+    }
+
+    public Transform GetOrderTransform(int index)
+    {
+        if (index >= 0 && index < activeOrders.Length && activeOrders[index] != null)
+        {
+            return activeOrders[index].transform;
+        }
+        return null;
+    }
+
+    // Helper function to compare two ingredient lists regardless of order
+    private bool AreIngredientsEqual(List<IngredientType> a, List<IngredientType> b)
+    {
+        if (a.Count != b.Count) return false;
+
+        List<IngredientType> bCopy = new List<IngredientType>(b);
+        foreach (var item in a)
+        {
+            if (bCopy.Contains(item))
+            {
+                bCopy.Remove(item); // Remove one instance of the item from the copy
+            }
+            else
+            {
+                return false; // If an item in a is not found in bCopy, the lists are not equal
+            }
+        }
+        return true;
+    }
+
+    // Find the index of the active order that matches the given DishType. Returns -1 if not found.
+    public int FindActiveOrderIndexByDishType(DishType type)
+    {
+        for (int i = 0; i < activeOrders.Length; i++)
+        {
+            if (activeOrders[i] != null && activeDishTypes[i] == type)
+            {
+                return i;
+            }
+        }
+        return -1;
     }
 }
