@@ -6,11 +6,17 @@ public class DragController : MonoBehaviour
     [SerializeField] private LayerMask ignoredLayers; // Ignore raycasts to the ingredient itself and other draggable items
     [SerializeField] private LayerMask surfaceLayers; // Only raycast to these layers (e.g. tables, floor) to determine where to place the ingredient
     [SerializeField] private float surfaceOffset = 0.1f; // Offset from the surface to prevent z-fighting and allow "climbing" onto tables
+    [SerializeField] private float returnToStartDuration = 0.2f;
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
 
     private bool isDragging = false;
     private BaseStorage currentAimedStorage;
     private Rigidbody rb;
+    private CookController currentAimedStove;
+    private CookController currentHoveredStove;
+    private Vector3 dragStartPosition;
+    private Quaternion dragStartRotation;
+    private Coroutine returnToStartRoutine;
 
     void Start()
     {
@@ -38,6 +44,7 @@ public class DragController : MonoBehaviour
         if (mouse.leftButton.isPressed && isDragging)
         {
             UpdatePositionOnSurface(mouse.position.ReadValue());
+            UpdateStoveHoverByRaycast(mouse.position.ReadValue());
         }
 
         // 3. Release
@@ -65,7 +72,19 @@ public class DragController : MonoBehaviour
 
     public void StartDrag()
     {
+        ClearAimedStorage();
+        ClearAimedStove();
+
         isDragging = true;
+        dragStartPosition = transform.position;
+        dragStartRotation = transform.rotation;
+
+        if (returnToStartRoutine != null)
+        {
+            StopCoroutine(returnToStartRoutine);
+            returnToStartRoutine = null;
+        }
+
         if (rb != null) rb.isKinematic = true; // Force disable physics while dragging
 
         if (onSFXRequest != null)
@@ -76,13 +95,25 @@ public class DragController : MonoBehaviour
 
     private void EndDrag()
     {
+        ResolveReleaseTargets(out CookController targetStove, out BaseStorage targetStorage);
+
         if (rb != null) rb.isKinematic = false; // Release hand to restore physics
-        if (currentAimedStorage != null)
+
+        bool canTryStove = targetStove != null && targetStove.CanAcceptIngredient();
+        if (canTryStove)
         {
-            currentAimedStorage.StoreItem(this.gameObject);
+            bool success = targetStove.TryAddIngredient(this.gameObject);
+            if (!success)
+                returnToStartRoutine = StartCoroutine(ReturnToDragStartPoint());
+        }
+        else if (targetStorage != null)
+        {
+            targetStorage.StoreItem(this.gameObject);
         }
 
         isDragging = false;
+        ClearAimedStorage();
+        ClearAimedStove();
 
         if (onSFXRequest != null)
             onSFXRequest.Raise(GameplaySFXType.INGR_DROP);
@@ -100,8 +131,7 @@ public class DragController : MonoBehaviour
             var storage = other.GetComponentInParent<BaseStorage>();
             if (storage != null)
             {
-                currentAimedStorage = storage;
-                storage.ToggleHighlight(true);
+                SetAimedStorage(storage);
             }
         }
     }
@@ -115,10 +145,133 @@ public class DragController : MonoBehaviour
             var storage = other.GetComponentInParent<BaseStorage>();
             if (storage != null)
             {
-                storage.ToggleHighlight(false);
                 if (currentAimedStorage == storage)
-                    currentAimedStorage = null;
+                    ClearAimedStorage();
             }
         }
+    }
+
+    private void UpdateStoveHoverByRaycast(Vector2 mousePos)
+    {
+        if (Camera.main == null)
+            return;
+
+        Ray ray = Camera.main.ScreenPointToRay(mousePos);
+        int raycastMask = ~ignoredLayers.value;
+
+        CookController hitStove = null;
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, raycastMask))
+        {
+            hitStove = hit.transform.GetComponentInParent<CookController>();
+        }
+
+        if (hitStove == currentHoveredStove)
+        {
+            currentAimedStove = hitStove;
+            return;
+        }
+
+        if (currentHoveredStove != null)
+            currentHoveredStove.SetDraggingHoverState(false);
+
+        currentHoveredStove = hitStove;
+        currentAimedStove = hitStove;
+
+        if (currentHoveredStove != null)
+            currentHoveredStove.SetDraggingHoverState(true);
+    }
+
+    private void ResolveReleaseTargets(out CookController targetStove, out BaseStorage targetStorage)
+    {
+        targetStove = null;
+        targetStorage = null;
+
+        if (Camera.main == null || Mouse.current == null)
+        {
+            targetStove = currentAimedStove;
+            targetStorage = currentAimedStorage;
+            return;
+        }
+
+        Vector2 mousePos = Mouse.current.position.ReadValue();
+        Ray ray = Camera.main.ScreenPointToRay(mousePos);
+        int raycastMask = ~ignoredLayers.value;
+
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, raycastMask))
+        {
+            targetStove = hit.transform.GetComponentInParent<CookController>();
+
+            if (hit.collider != null &&
+                (hit.collider.CompareTag("Fridge") || hit.collider.CompareTag("GeneralStorage")))
+            {
+                targetStorage = hit.transform.GetComponentInParent<BaseStorage>();
+            }
+            else
+            {
+                targetStorage = hit.transform.GetComponentInParent<BaseStorage>();
+            }
+        }
+
+        if (targetStove == null)
+            targetStove = currentAimedStove;
+
+        if (targetStorage == null)
+            targetStorage = currentAimedStorage;
+    }
+
+    private void SetAimedStorage(BaseStorage storage)
+    {
+        if (storage == currentAimedStorage)
+            return;
+
+        ClearAimedStorage();
+        currentAimedStorage = storage;
+        currentAimedStorage.ToggleHighlight(true);
+    }
+
+    private void ClearAimedStorage()
+    {
+        if (currentAimedStorage != null)
+            currentAimedStorage.ToggleHighlight(false);
+
+        currentAimedStorage = null;
+    }
+
+    private void ClearAimedStove()
+    {
+        if (currentHoveredStove != null)
+            currentHoveredStove.SetDraggingHoverState(false);
+
+        currentHoveredStove = null;
+        currentAimedStove = null;
+    }
+
+    private System.Collections.IEnumerator ReturnToDragStartPoint()
+    {
+        if (rb != null)
+            rb.isKinematic = true;
+
+        Vector3 startPos = transform.position;
+        Quaternion startRot = transform.rotation;
+        float elapsed = 0f;
+
+        while (elapsed < returnToStartDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / returnToStartDuration);
+            t = 1f - Mathf.Pow(1f - t, 3f);
+
+            transform.position = Vector3.Lerp(startPos, dragStartPosition, t);
+            transform.rotation = Quaternion.Slerp(startRot, dragStartRotation, t);
+            yield return null;
+        }
+
+        transform.position = dragStartPosition;
+        transform.rotation = dragStartRotation;
+
+        if (rb != null)
+            rb.isKinematic = false;
+
+        returnToStartRoutine = null;
     }
 }
