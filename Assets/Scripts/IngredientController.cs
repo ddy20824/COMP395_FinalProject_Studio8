@@ -10,6 +10,7 @@ public class IngredientController : MonoBehaviour
     [SerializeField] private int capacity; // For bulk items, represents quantity; for others, it's 1
     [SerializeField] private float maxLifeTime = 20f;      // Total lifespan in seconds
     [SerializeField] private float decayRateInFridge = 0.2f; // Decay rate multiplier when in fridge
+    [SerializeField] private float decayRateOnFloor = 2.0f; // Decay rate multiplier when on floor
 
 
     [Header("Life Bar UI")]
@@ -30,6 +31,7 @@ public class IngredientController : MonoBehaviour
     private float decaySpeed => 1f / maxLifeTime;
     private float currentLife;
     private bool isInFridge = false;
+    private bool isOnFloor = false;
     private float currentDecay;
     private Material foodMaterial;
     private Vector3 originalScale;
@@ -74,8 +76,8 @@ public class IngredientController : MonoBehaviour
 
         if (isRotted) return; // No need to update decay if already rotted
 
-        // Apply slower decay rate when inside the fridge
-        float decayRate = isInFridge ? decayRateInFridge : 1.0f;
+        // Apply slower decay rate when inside the fridge or on the floor
+        float decayRate = isInFridge ? decayRateInFridge : isOnFloor ? decayRateOnFloor : 1.0f;
         currentLife -= Time.deltaTime * decayRate;
         currentDecay = 1f - (currentLife / maxLifeTime);
 
@@ -165,5 +167,10 @@ public class IngredientController : MonoBehaviour
     public void SetInFridge(bool inFridge)
     {
         isInFridge = inFridge;
+    }
+
+    public void SetOnFloor(bool onFloor)
+    {
+        isOnFloor = onFloor;
     }
 }
