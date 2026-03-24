@@ -5,6 +5,8 @@ using UnityEngine;
 public class GameConfig : ScriptableObject
 {
     public int capacityOfBox;
+    public GameObject failureDishPrefab;
+    public float failedDishCookTime = 5f;
     public List<LevelDataContent> allLevels = new List<LevelDataContent>();
     public List<IngredientMapping> ingredientMappings = new List<IngredientMapping>();
     public List<DishTypeMapping> dishTypeMappings = new List<DishTypeMapping>();

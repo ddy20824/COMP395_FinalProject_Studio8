@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Fridge
   - GeneralStorage
+  - Stove
   layers:
   - Default
   - TransparentFX
