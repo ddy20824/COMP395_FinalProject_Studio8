@@ -17,7 +17,7 @@ public abstract class BaseStorage : MonoBehaviour
 
     protected Collider selfCollider;
 
-    void Start()
+    protected virtual void Start()
     {
         selfCollider = GetComponent<Collider>();
         Outline outline = GetComponentInChildren<Outline>();
@@ -49,6 +49,7 @@ public abstract class BaseStorage : MonoBehaviour
 
     public virtual bool StoreItem(GameObject item)
     {
+        ToggleHighlight(false);
         if (IsFull)
         {
             Debug.Log($"{name} is full！");
@@ -62,7 +63,6 @@ public abstract class BaseStorage : MonoBehaviour
 
         OnItemStored(item);
 
-        ToggleHighlight(false);
         return true;
     }
 

@@ -121,7 +121,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 888fca01eb6d69f4a8ab311dfeba88e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WasteBin
-  _onIngredientTrashed: {fileID: 11400000, guid: 9e3b275a1d768ec43bb4edc456cf4fad, type: 2}
+  _onFreshIngredientTrashed: {fileID: 11400000, guid: c519c075d97ecea4e92b9dacd09ff097, type: 2}
+  onSFXRequest: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
+  trashBinBounceChannel: {fileID: 11400000, guid: 278dabd54391eac4490e936c2223d579, type: 2}
+  bounceScaleMultiplier: 1.2
+  bounceSpeed: 5
 --- !u!54 &2704696198346414164
 Rigidbody:
   m_ObjectHideFlags: 0

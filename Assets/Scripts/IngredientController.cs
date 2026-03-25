@@ -10,12 +10,14 @@ public class IngredientController : MonoBehaviour
     [SerializeField] private int capacity; // For bulk items, represents quantity; for others, it's 1
     [SerializeField] private float maxLifeTime = 20f;      // Total lifespan in seconds
     [SerializeField] private float decayRateInFridge = 0.2f; // Decay rate multiplier when in fridge
-    
+    [SerializeField] private float decayRateOnFloor = 2.0f; // Decay rate multiplier when on floor
+
 
     [Header("Life Bar UI")]
     [SerializeField] private GameObject lifeBarRoot;  // Root Canvas/GameObject to show/hide
     [SerializeField] private Image lifeBarFill;       // The fill Image (Filled type)
     [SerializeField] private bool faceCamera = true;  // Keep life bar readable in 3D by billboard behavior
+    [SerializeField] private float lifeBarHeightOffset = 0.5f; // offset above the ingredient
 
     [Header("Hover Feedback")]
     [SerializeField] private LayerMask ingredientLayer;
@@ -29,22 +31,25 @@ public class IngredientController : MonoBehaviour
     private float decaySpeed => 1f / maxLifeTime;
     private float currentLife;
     private bool isInFridge = false;
+    private bool isOnFloor = false;
     private float currentDecay;
     private Material foodMaterial;
     private Vector3 originalScale;
     private Color originalColor = Color.white;
     private bool isHovered;
     private bool isRotted;
+    private bool hoverInteractionEnabled = true;
 
     // Public getters for ingredient properties
     public string GetIngredientName() => ingredientName;
     public IngredientType GetIngredientType() => type;
     public int GetCapacity() => capacity;
+    public bool IsRotted() => isRotted;
 
     void Start()
     {
         currentLife = maxLifeTime;
-        foodMaterial = GetComponent<Renderer>().material;
+        foodMaterial = GetComponentInChildren<Renderer>().material;
         originalScale = transform.localScale;
 
         if (foodMaterial != null)
@@ -72,8 +77,8 @@ public class IngredientController : MonoBehaviour
 
         if (isRotted) return; // No need to update decay if already rotted
 
-        // Apply slower decay rate when inside the fridge
-        float decayRate = isInFridge ? decayRateInFridge : 1.0f;
+        // Apply slower decay rate when inside the fridge or on the floor
+        float decayRate = isInFridge ? decayRateInFridge : isOnFloor ? decayRateOnFloor : 1.0f;
         currentLife -= Time.deltaTime * decayRate;
         currentDecay = 1f - (currentLife / maxLifeTime);
 
@@ -101,6 +106,12 @@ public class IngredientController : MonoBehaviour
 
     private void UpdateHoverState()
     {
+        if (!hoverInteractionEnabled)
+        {
+            SetHoverState(false);
+            return;
+        }
+
         var mouse = Mouse.current;
         if (mouse == null || Camera.main == null)
         {
@@ -150,7 +161,10 @@ public class IngredientController : MonoBehaviour
         Transform barTransform = lifeBarRoot.transform;
         Transform camTransform = Camera.main.transform;
 
-        // Match camera orientation so the world-space UI is always readable.
+        // 1. Keep it above the ingredient
+        barTransform.position = transform.position + Vector3.up * lifeBarHeightOffset;
+
+        // 2. Face the camera
         barTransform.LookAt(
             barTransform.position + camTransform.rotation * Vector3.forward,
             camTransform.rotation * Vector3.up
@@ -160,5 +174,19 @@ public class IngredientController : MonoBehaviour
     public void SetInFridge(bool inFridge)
     {
         isInFridge = inFridge;
+    }
+
+    public void SetOnFloor(bool onFloor)
+    {
+        isOnFloor = onFloor;
+    }
+
+    public void SetHoverInteractionEnabled(bool enabled)
+    {
+        hoverInteractionEnabled = enabled;
+        if (!hoverInteractionEnabled)
+        {
+            SetHoverState(false);
+        }
     }
 }

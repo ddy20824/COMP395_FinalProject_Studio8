@@ -858,10 +858,10 @@ MonoBehaviour:
   animator: {fileID: 8861378268127405552}
   cameraFocusChannel: {fileID: 11400000, guid: 9605dd7fe81ed904a9fda413a7c8ad4c, type: 2}
   cameraSlot: {fileID: 7241208143949909934}
-  itemSpacing: 0.3
-  columns: 3
   explodeOrigin: {fileID: 3630084684702789268}
   onSFXRequest: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
+  fridgeInternalLight: {fileID: 6542685033332082659}
+  fridgeBodyRenderer: {fileID: 1275847261444054427}
   levelIndex: 0
 --- !u!1 &7567082411260545416
 GameObject:

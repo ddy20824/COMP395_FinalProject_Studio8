@@ -13,24 +13,99 @@ public class FridgeController : BaseStorage
     private Transform cameraSlot;
 
     [Header("Exploded View Settings")]
-    [SerializeField] private float itemSpacing = 0.3f;
-    [SerializeField] private int columns = 3;
     [SerializeField] private Transform explodeOrigin;
 
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
 
+    [Header("Power Outage Visuals")]
+    [SerializeField] private Light fridgeInternalLight;
+    [SerializeField] private MeshRenderer fridgeBodyRenderer;
+    private Color originalEmissionColor;
+    private Color originalInternalLightColor;
 
-    public int levelIndex = 0;
+    private float itemSpacing = 0.3f;
+    private int columns = 3;
 
     private bool isOpen = false;
+    private bool isPowerOutage = false;
 
     void Awake()
     {
-        LevelDataContent levelData = gameConfig.allLevels[levelIndex];
+        if (fridgeBodyRenderer != null)
+        {
+            originalEmissionColor = fridgeBodyRenderer.material.GetColor("_EmissionColor");
+        }
+        if (fridgeInternalLight != null)
+        {
+            originalInternalLightColor = fridgeInternalLight.color;
+        }
+
+        LevelDataContent levelData = gameConfig.allLevels.Find(ld => ld.levelName == GameSession.CurrentLevelIndex);
         maxCapacity = levelData.capacityOfFridge;
     }
 
+
+    protected override void Start()
+    {
+        base.Start();
+        LevelDataContent levelData = gameConfig.allLevels.Find(ld => ld.levelName == GameSession.CurrentLevelIndex);
+        if (levelData.hasPowerOutageEvent)
+        {
+            StartCoroutine(PowerOutageRoutine());
+        }
+    }
+
+    private IEnumerator PowerOutageRoutine()
+    {
+        while (true)
+        {
+            float waitBeforeOutage = Random.Range(30f, 50f);
+            yield return new WaitForSeconds(waitBeforeOutage);
+
+            StartPowerOutage();
+
+            float outageDuration = Random.Range(10f, 15f);
+            yield return new WaitForSeconds(outageDuration);
+
+            StopPowerOutage();
+        }
+    }
+
+    private void StartPowerOutage()
+    {
+        isPowerOutage = true;
+
+        if (fridgeInternalLight != null)
+        {
+            fridgeInternalLight.color = Color.red;
+        }
+
+        if (fridgeBodyRenderer != null)
+        {
+            Color targetColor = new Color(0.5f, 0, 0);
+            fridgeBodyRenderer.material.SetColor("_EmissionColor", targetColor);
+            fridgeBodyRenderer.material.EnableKeyword("_EMISSION");
+        }
+    }
+
+    private void StopPowerOutage()
+    {
+        isPowerOutage = false;
+
+        if (fridgeInternalLight != null)
+        {
+            fridgeInternalLight.color = originalInternalLightColor;
+        }
+
+        if (fridgeBodyRenderer != null)
+        {
+            Color targetColor = originalEmissionColor;
+            fridgeBodyRenderer.material.SetColor("_EmissionColor", targetColor);
+            fridgeBodyRenderer.material.DisableKeyword("_EMISSION");
+        }
+
+    }
     protected override void HandleMouseInput(Vector2 screenPoint)
     {
         if (Camera.main == null)
@@ -113,7 +188,7 @@ public class FridgeController : BaseStorage
 
         if (item.TryGetComponent(out IngredientController ingredient))
         {
-            ingredient.SetInFridge(true);
+            ingredient.SetInFridge(!isPowerOutage);
         }
 
         item.SetActive(false);

@@ -5,8 +5,6 @@ public class LevelBoxGenerator : MonoBehaviour
 {
     [Header("Config")]
     public GameConfig gameConfig;
-    public int levelIndex = 0;
-
     [Header("Box Setup")]
     public GameObject boxPrefab;
     public GameObject glowEffectPrefab;
@@ -41,12 +39,8 @@ public class LevelBoxGenerator : MonoBehaviour
         {
             return;
         }
-        if (levelIndex < 0 || levelIndex >= gameConfig.allLevels.Count)
-        {
-            return;
-        }
 
-        LevelDataContent levelData = gameConfig.allLevels[levelIndex];
+        LevelDataContent levelData = gameConfig.allLevels.Find(ld => ld.levelName == GameSession.CurrentLevelIndex);
         if (levelData.availableIngredients == null || levelData.availableIngredients.Count == 0)
         {
             return;
