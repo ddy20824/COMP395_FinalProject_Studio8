@@ -17,6 +17,7 @@ public class DragController : MonoBehaviour
     private Vector3 dragStartPosition;
     private Quaternion dragStartRotation;
     private Coroutine returnToStartRoutine;
+    private bool dragInteractionEnabled = true;
 
     void Start()
     {
@@ -27,6 +28,7 @@ public class DragController : MonoBehaviour
     {
         var mouse = Mouse.current;
         if (mouse == null) return;
+        if (!dragInteractionEnabled) return;
 
         // 1. Start dragging when left mouse button is pressed on the ingredient
         if (mouse.leftButton.wasPressedThisFrame)
@@ -91,6 +93,19 @@ public class DragController : MonoBehaviour
             onSFXRequest.Raise(GameplaySFXType.INGR_DRAG);
 
         CursorManager.Instance.SetGrabCursor();
+    }
+
+    public void SetDragInteractionEnabled(bool enabled)
+    {
+        dragInteractionEnabled = enabled;
+
+        if (!dragInteractionEnabled)
+        {
+            isDragging = false;
+            ClearAimedStorage();
+            ClearAimedStove();
+            CursorManager.Instance.SetNormalCursor();
+        }
     }
 
     private void EndDrag()
