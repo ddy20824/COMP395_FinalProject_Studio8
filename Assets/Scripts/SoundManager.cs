@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class SoundManager : MonoBehaviour
 {
     private static SoundManager instance;
+    private bool isBGM_On = true;
 
     [Header("SFX Resources")]
     [SerializeField] private AudioClip[] uiClips;
@@ -60,7 +61,7 @@ public class SoundManager : MonoBehaviour
             case UISFXType.BGM1 or UISFXType.BGM2:
                 Instance.bgmSource.clip = Instance.uiClips[(int)type];
                 Instance.bgmSource.loop = true;
-                Instance.bgmSource.volume = bgmVolume;
+                Instance.bgmSource.volume = isBGM_On ? bgmVolume : 0.0f;
                 Instance.bgmSource.Play();
                 break;
             default:
@@ -78,6 +79,12 @@ public class SoundManager : MonoBehaviour
             Instance.bgmSource.loop = false;
             Instance.bgmSource.clip = null;
         }
+    }
+
+    private void ToggleBGM()
+    {
+        isBGM_On = !isBGM_On;
+        Instance.bgmSource.volume = isBGM_On ? bgmVolume : 0.0f;
     }
 
     private void PlayBGM()
@@ -111,5 +118,10 @@ public class SoundManager : MonoBehaviour
     public void PlayBtnClickSound()
     {
         PlayUISound(UISFXType.BTN_CLICK);
+    }
+
+    public void ToggleGameMusic()
+    {
+        ToggleBGM();
     }
 }
