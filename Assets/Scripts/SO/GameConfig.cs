@@ -7,6 +7,7 @@ public class GameConfig : ScriptableObject
     public int capacityOfBox;
     public GameObject failureDishPrefab;
     public float failedDishCookTime = 5f;
+    public PenaltyScore penaltyScore = new PenaltyScore();
     public List<LevelDataContent> allLevels = new List<LevelDataContent>();
     public List<IngredientMapping> ingredientMappings = new List<IngredientMapping>();
     public List<DishTypeMapping> dishTypeMappings = new List<DishTypeMapping>();
@@ -33,7 +34,6 @@ public class LevelDataContent
 public class IngredientMapping
 {
     public IngredientType type;
-    public int penaltyScore; // Score deducted from the total score after ingrediant trashed
     public GameObject prefab;
     public Sprite sprite;
     public float iconScale = 0.1f;
@@ -49,4 +49,13 @@ public class DishTypeMapping
     public int scoreValue;
     public List<IngredientType> requiredIngredients;
     public int cookingTime; // in seconds
+}
+
+[System.Serializable]
+public class PenaltyScore
+{
+    public int rottenIngredient = 10;
+    public int wastedIngredient = 30;
+    public int leftRottenIngredient = 30;
+    public int failureDish = 50;
 }

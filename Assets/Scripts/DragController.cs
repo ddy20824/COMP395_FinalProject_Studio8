@@ -33,7 +33,7 @@ public class DragController : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(mouse.position.ReadValue());
             int raycastMask = ~ignoredLayers.value;
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, raycastMask) &&
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, raycastMask, QueryTriggerInteraction.Ignore) &&
                 (hit.transform == transform || hit.transform.IsChildOf(transform)))
             {
                 StartDrag();

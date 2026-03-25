@@ -15,6 +15,11 @@ MonoBehaviour:
   capacityOfBox: 4
   failureDishPrefab: {fileID: 1589259530340492540, guid: 8b0778d3059d13e44b665d55b04dfde2, type: 3}
   failedDishCookTime: 2
+  penaltyScore:
+    rottenIngredient: 10
+    wastedIngredient: 30
+    leftRottenIngredient: 30
+    failureDish: 50
   allLevels:
   - levelName: 0
     timeLimit: 90
@@ -48,22 +53,18 @@ MonoBehaviour:
     panNumber: 2
   ingredientMappings:
   - type: 0
-    penaltyScore: 0
     prefab: {fileID: 1498797515652644912, guid: ff29d08a9a6958a4a924868b6b97d46a, type: 3}
     sprite: {fileID: 21300000, guid: 657fe7138c97d6e41bd88cd4109ae4fa, type: 3}
     iconScale: 0.1
   - type: 1
-    penaltyScore: 0
     prefab: {fileID: 2247471851365886193, guid: 08d7b782fa0e08640ad9ffea5c10ffda, type: 3}
     sprite: {fileID: 21300000, guid: 7f06a67c5e8112d478012de867a7880e, type: 3}
     iconScale: 0.04
   - type: 2
-    penaltyScore: 0
     prefab: {fileID: 3583665068364657818, guid: 63d66d4a9837bc145a4af74cd7f99b89, type: 3}
     sprite: {fileID: 21300000, guid: aba94962ccb24e545b3f468e801423e6, type: 3}
     iconScale: 0.04
   - type: 3
-    penaltyScore: 0
     prefab: {fileID: 218370741152978480, guid: 0bee35ed42125a54dada38176062c160, type: 3}
     sprite: {fileID: 21300000, guid: 7ee5b8e92803b914580930c26da2a9c7, type: 3}
     iconScale: 0.04
@@ -72,27 +73,27 @@ MonoBehaviour:
     prefab: {fileID: 3516829482154127247, guid: ccccb443b0402dd4cb35b1ab289cb699, type: 3}
     sprite: {fileID: 21300000, guid: ebd0c9539045d1045b35a663a46c041b, type: 3}
     iconScale: 0.17
-    scoreValue: 10
+    scoreValue: 80
     requiredIngredients: 02000000
     cookingTime: 4
   - type: 1
     prefab: {fileID: 8743493234189070586, guid: 0062d57330a98ec4596ae600517f7f04, type: 3}
     sprite: {fileID: 21300000, guid: 83bb46a27aa64ed4d8cda07c543bb0c2, type: 3}
     iconScale: 0.17
-    scoreValue: 10
+    scoreValue: 120
     requiredIngredients: 0000000003000000
     cookingTime: 6
   - type: 2
     prefab: {fileID: 2384606962629753220, guid: 71b540b0de78de545b88ca1ec54f0942, type: 3}
     sprite: {fileID: 21300000, guid: ddc8982ebe0d58946877c0a883257dd9, type: 3}
     iconScale: 0.17
-    scoreValue: 10
+    scoreValue: 150
     requiredIngredients: 0200000003000000
     cookingTime: 6
   - type: 3
     prefab: {fileID: 3591644331033874922, guid: 092b71d43fdb572429a1c7d677e776f8, type: 3}
     sprite: {fileID: 21300000, guid: 223200576ef46c1429f4801d4aac54c6, type: 3}
     iconScale: 0.17
-    scoreValue: 10
+    scoreValue: 250
     requiredIngredients: 020000000300000001000000
     cookingTime: 8
