@@ -22,6 +22,8 @@ public class SoundManager : MonoBehaviour
 
     public static SoundManager Instance { get => instance; private set => instance = value; }
 
+    public bool IsBGM_On { get => isBGM_On; }
+
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -81,9 +83,9 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    private void ToggleBGM()
+    private void ToggleBGM(bool isOn)
     {
-        isBGM_On = !isBGM_On;
+        isBGM_On = isOn;
         Instance.bgmSource.volume = isBGM_On ? bgmVolume : 0.0f;
     }
 
@@ -120,8 +122,8 @@ public class SoundManager : MonoBehaviour
         PlayUISound(UISFXType.BTN_CLICK);
     }
 
-    public void ToggleGameMusic()
+    public void ToggleGameMusic(bool isOn)
     {
-        ToggleBGM();
+        ToggleBGM(isOn);
     }
 }
