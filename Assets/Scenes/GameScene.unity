@@ -2101,6 +2101,55 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4321791151259765820, guid: bea75d025e3539940be1ab9456b002d8, type: 3}
   m_PrefabInstance: {fileID: 1425360505}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1428425583
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1428425585}
+  - component: {fileID: 1428425584}
+  m_Layer: 0
+  m_Name: _ScoreManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1428425584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428425583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3e7e95c7f02b77448e0f684953ab32a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
+  onScoreChangedChannel: {fileID: 11400000, guid: 12c354ab5b44457468fd3417064826cb, type: 2}
+  onIngredientRottenChannel: {fileID: 11400000, guid: 36c18e52302ba3a4c90d5703455d1cb2, type: 2}
+  onDishDeliveredChannel: {fileID: 11400000, guid: 14d0b33421226994d8170025e3c946cf, type: 2}
+  onFreshIngredientTrashedChannel: {fileID: 11400000, guid: c519c075d97ecea4e92b9dacd09ff097, type: 2}
+  gameConfig: {fileID: 11400000, guid: fae987cbdb15f8846b04294df40aa348, type: 2}
+--- !u!4 &1428425585
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428425583}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.01589, y: 2.78198, z: 0.3857}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1429308961
 GameObject:
   m_ObjectHideFlags: 0
@@ -2641,6 +2690,10 @@ PrefabInstance:
       propertyPath: onSFXRequest
       value: 
       objectReference: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
+    - target: {fileID: 2141431544835945589, guid: 0df451622d7200c468fb0007569e8c98, type: 3}
+      propertyPath: cameraFocusChannel
+      value: 
+      objectReference: {fileID: 11400000, guid: 9605dd7fe81ed904a9fda413a7c8ad4c, type: 2}
     - target: {fileID: 5010624184890176765, guid: 0df451622d7200c468fb0007569e8c98, type: 3}
       propertyPath: m_Name
       value: OrderBoard
@@ -3695,3 +3748,4 @@ SceneRoots:
   - {fileID: 501530517}
   - {fileID: 373677179}
   - {fileID: 1403363224}
+  - {fileID: 1428425585}
