@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using System.Collections.Generic;
 
 public class BoxInteraction : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class BoxInteraction : MonoBehaviour
     private int ingredientCount;
     private bool hasOpened;
     private Coroutine spawnDelayCoroutine;
+    private readonly List<GameObject> lockedIngredients = new List<GameObject>();
 
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
@@ -78,6 +80,12 @@ public class BoxInteraction : MonoBehaviour
             {
                 closedBox.SetActive(false);
             }
+
+            if (spawnDelayCoroutine != null)
+            {
+                StopCoroutine(spawnDelayCoroutine);
+            }
+            spawnDelayCoroutine = StartCoroutine(RevealSpawnedIngredientsOnMouseRelease());
             hasOpened = true;
             return;
         }
@@ -156,8 +164,60 @@ public class BoxInteraction : MonoBehaviour
 
             Vector3 localOffset = new Vector3((col - half) * ingredientSpacing, 0f, row * ingredientSpacing);
             Vector3 spawnPos = anchor.TransformPoint(localOffset);
-            Instantiate(ingredientPrefab, spawnPos, anchor.rotation);
+            GameObject spawned = Instantiate(ingredientPrefab, spawnPos, anchor.rotation);
+            HideIngredientInteraction(spawned);
         }
+    }
+
+    private void HideIngredientInteraction(GameObject ingredient)
+    {
+        if (ingredient == null)
+        {
+            return;
+        }
+
+        SetIngredientInteractionEnabled(ingredient, false);
+        lockedIngredients.Add(ingredient);
+    }
+
+    private void RevealSpawnedIngredients()
+    {
+        for (int i = 0; i < lockedIngredients.Count; i++)
+        {
+            if (lockedIngredients[i] != null)
+            {
+                SetIngredientInteractionEnabled(lockedIngredients[i], true);
+            }
+        }
+
+        lockedIngredients.Clear();
+    }
+
+    private static void SetIngredientInteractionEnabled(GameObject ingredient, bool enabled)
+    {
+        DragController[] dragControllers = ingredient.GetComponentsInChildren<DragController>(true);
+        for (int i = 0; i < dragControllers.Length; i++)
+        {
+            dragControllers[i].SetDragInteractionEnabled(enabled);
+        }
+
+        IngredientController[] ingredientControllers = ingredient.GetComponentsInChildren<IngredientController>(true);
+        for (int i = 0; i < ingredientControllers.Length; i++)
+        {
+            ingredientControllers[i].SetHoverInteractionEnabled(enabled);
+        }
+    }
+
+    private IEnumerator RevealSpawnedIngredientsOnMouseRelease()
+    {
+        // Wait for left mouse release so the opening click cannot immediately pick an ingredient.
+        while (Mouse.current != null && Mouse.current.leftButton.isPressed)
+        {
+            yield return null;
+        }
+
+        RevealSpawnedIngredients();
+        spawnDelayCoroutine = null;
     }
 
     private bool HasObjectOnTop()

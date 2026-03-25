@@ -38,6 +38,7 @@ public class IngredientController : MonoBehaviour
     private Color originalColor = Color.white;
     private bool isHovered;
     private bool isRotted;
+    private bool hoverInteractionEnabled = true;
 
     // Public getters for ingredient properties
     public string GetIngredientName() => ingredientName;
@@ -105,6 +106,12 @@ public class IngredientController : MonoBehaviour
 
     private void UpdateHoverState()
     {
+        if (!hoverInteractionEnabled)
+        {
+            SetHoverState(false);
+            return;
+        }
+
         var mouse = Mouse.current;
         if (mouse == null || Camera.main == null)
         {
@@ -172,5 +179,14 @@ public class IngredientController : MonoBehaviour
     public void SetOnFloor(bool onFloor)
     {
         isOnFloor = onFloor;
+    }
+
+    public void SetHoverInteractionEnabled(bool enabled)
+    {
+        hoverInteractionEnabled = enabled;
+        if (!hoverInteractionEnabled)
+        {
+            SetHoverState(false);
+        }
     }
 }
