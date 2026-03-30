@@ -14,8 +14,10 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private float bgmVolume = 0.5f;
     private AudioSource uiSource;
     [SerializeField] private float uiVolume = 1.0f;
-    private AudioSource gameplaySource;
-    [SerializeField] private float gameplayVolume = 0.7f;
+    private AudioSource gameplayOneShotSource;
+    [SerializeField] private float gameplayOneShotVolume = 0.7f;
+    private AudioSource gameplayLoopingSource;
+    [SerializeField] private float gameplayLoopingVolume = 0.7f;
 
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel sfxEventChannel;
@@ -36,7 +38,8 @@ public class SoundManager : MonoBehaviour
 
         bgmSource = GetComponent<AudioSource>();
         uiSource = gameObject.AddComponent<AudioSource>();
-        gameplaySource = gameObject.AddComponent<AudioSource>();
+        gameplayOneShotSource = gameObject.AddComponent<AudioSource>();
+        gameplayLoopingSource = gameObject.AddComponent<AudioSource>();
     }
 
     /* Game event subscription */
@@ -110,10 +113,57 @@ public class SoundManager : MonoBehaviour
     }
 
     // === Gameplay SFX Section ===
-    private void TriggerGameplaySound(GameplaySFXType type)
+    private void PlayOneShotGameplaySound(GameplaySFXType type)
     {
         AudioClip clip = Instance.gameplayClips[(int)type];
-        Instance.gameplaySource.PlayOneShot(clip, gameplayVolume);
+        Instance.gameplayOneShotSource.PlayOneShot(clip, gameplayOneShotVolume);
+    }
+
+    private void PlayLoopingGameplaySound(GameplaySFXType type)
+    {
+        AudioClip clip = Instance.gameplayClips[(int)type];
+
+        if (Instance.gameplayLoopingSource.clip == clip && Instance.gameplayLoopingSource.isPlaying)
+        {
+            return;
+        }
+
+        Instance.gameplayLoopingSource.clip = clip;
+        Instance.gameplayLoopingSource.loop = true;
+        Instance.gameplayLoopingSource.volume = gameplayOneShotVolume;
+        Instance.gameplayLoopingSource.Play();
+    }
+
+    private void TriggerGameplaySound(GameplaySFXType type)
+    {
+        switch (type)
+        {
+            case GameplaySFXType.IS_COOKING:
+                PlayLoopingGameplaySound(type);
+                break;
+            case GameplaySFXType.COOKING_END:
+                PlayOneShotGameplaySound(type);
+                StopGameplayLoopingSound(GameplaySFXType.IS_COOKING);
+                break;
+            default:
+                PlayOneShotGameplaySound(type);
+                break;
+        }
+        //AudioClip clip = Instance.gameplayClips[(int)type];
+        //Instance.gameplaySource.PlayOneShot(clip, gameplayVolume);
+    }
+
+    private void StopGameplayLoopingSound(GameplaySFXType type)
+    {
+        AudioClip current = Instance.gameplayLoopingSource.clip;
+        AudioClip clipToStop = Instance.gameplayClips[(int)type];
+
+        if (current == clipToStop)
+        {
+            Instance.gameplayLoopingSource.Stop();
+            Instance.gameplayLoopingSource.clip = null;
+            Instance.gameplayLoopingSource.loop = false;
+        }
     }
 
     /* Public action members */

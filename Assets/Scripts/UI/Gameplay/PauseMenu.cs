@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
+using NUnit.Framework;
+using System.Linq;
+using System.Collections.Generic;
 
 public class PauseMenu : BasePanel<PauseMenu>
 {
@@ -10,6 +14,7 @@ public class PauseMenu : BasePanel<PauseMenu>
     [SerializeField] private Button btnBackToMain;
     [SerializeField] private Button btnResume;
     [SerializeField] private Button btnSettings;
+    //[SerializeField] private PhysicsRaycaster cameraRaycaster;
 
     private bool isPause = false;
 
@@ -36,9 +41,7 @@ public class PauseMenu : BasePanel<PauseMenu>
 
         btnResume.onClick.AddListener(() =>
         {
-            isPause = false;
-            Time.timeScale = 1.0f;
-            HideMe();
+            ControlGamePause();
         });
 
         btnSettings.onClick.AddListener(() =>
@@ -69,16 +72,49 @@ public class PauseMenu : BasePanel<PauseMenu>
     private void ControlGamePause()
     {
         isPause = !isPause;
+
+        List<MonoBehaviour> allRaycastingScripts = FindAllInteractionScripts();
+
+        foreach (MonoBehaviour script in allRaycastingScripts)
+        {
+            script.enabled = !isPause;
+        }
+
         if (isPause)
         {
             Time.timeScale = 0.0f;
             //CursorManager.Instance.SetNormalCursor();
             ShowMe();
+            
         }
         else
         {
             Time.timeScale = 1.0f;
-            HideMe();
+            HideMe();            
         }
+    }
+
+    /* Public action members */
+    public static List<MonoBehaviour> FindAllInteractionScripts()
+    {
+        List<MonoBehaviour> scripts = new List<MonoBehaviour>();
+
+        DragController[] allDraggables = Object.FindObjectsByType<DragController>(FindObjectsSortMode.None);
+        IngredientController[] allIngredients = Object.FindObjectsByType<IngredientController>(FindObjectsSortMode.None);
+        BaseStorage[] storages = Object.FindObjectsByType<BaseStorage>(FindObjectsSortMode.None);
+        BoxInteraction[] boxInteractions = Object.FindObjectsByType<BoxInteraction>(FindObjectsSortMode.None);
+        OrderManager[] orderManagers = Object.FindObjectsByType<OrderManager>(FindObjectsSortMode.None);
+        CookController[] cookControllers = Object.FindObjectsByType<CookController>(FindObjectsSortMode.None);
+        CookedDish[] cookedDishes = Object.FindObjectsByType<CookedDish>(FindObjectsSortMode.None);
+
+        scripts.AddRange(allDraggables);
+        scripts.AddRange(allIngredients);
+        scripts.AddRange(storages);
+        scripts.AddRange(boxInteractions);
+        scripts.AddRange(orderManagers);
+        scripts.AddRange(cookControllers);
+        scripts.AddRange(cookedDishes);
+
+        return scripts;
     }
 }

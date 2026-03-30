@@ -483,9 +483,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: de607facfd7f1104fad309932fd8519b, type: 3}
   - {fileID: 8300000, guid: 4a028ad734bcd274e8402e564bfe1348, type: 3}
   - {fileID: 8300000, guid: 6603ac47cec0cb74c88b053f53d62ff2, type: 3}
+  - {fileID: 8300000, guid: cc4b7be8c29c7c444b94781a202e5bcb, type: 3}
   bgmVolume: 0.1
   uiVolume: 1
-  gameplayVolume: 1
+  gameplayOneShotVolume: 0.7
+  gameplayLoopingVolume: 0.7
   sfxEventChannel: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
 --- !u!82 &623608529
 AudioSource:
