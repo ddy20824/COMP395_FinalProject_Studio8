@@ -958,7 +958,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Successful Dish:'
+  m_text: 'Successful Dishes:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bb56d700d36dee6409d1e33888d90da6, type: 2}
   m_sharedMaterial: {fileID: 7319947107357457081, guid: bb56d700d36dee6409d1e33888d90da6, type: 2}
@@ -6743,7 +6743,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Failed Dish:'
+  m_text: 'Failed Dishes:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bb56d700d36dee6409d1e33888d90da6, type: 2}
   m_sharedMaterial: {fileID: 7319947107357457081, guid: bb56d700d36dee6409d1e33888d90da6, type: 2}
