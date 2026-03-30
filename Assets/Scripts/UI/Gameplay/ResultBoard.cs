@@ -62,17 +62,14 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void BackToMainMenu()
     {
+        ResetGameState();
         SceneManager.LoadScene("MainMenu");
     }
 
     private void GoNextLevel()
     {
         // TODO: Implement Next Level
-        Time.timeScale = 1.0f;
-        SoundManager.Instance.ToggleGameMusic(true);
-        blurVolume.SetActive(false);
-        pauseMenuScript.enabled = true;
-        btnSettings.enabled = true;
+        ResetGameState();
         HideMe();
     }
 
@@ -163,6 +160,16 @@ public class ResultBoard : BasePanel<ResultBoard>
             freeAdvice.text = "Don't worry! An environmentalist will contact you shortly.";
         }
     }
+
+    private void ResetGameState()
+    {
+        Time.timeScale = 1.0f;
+        SoundManager.Instance.ToggleGameMusic(true);
+        blurVolume.SetActive(false);
+        pauseMenuScript.enabled = true;
+        btnSettings.enabled = true;
+    }
+
     private void TestUI() // Only for testing
     {
         successfulDish.text = $"3 x 100 = 300";

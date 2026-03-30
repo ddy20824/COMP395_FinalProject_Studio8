@@ -45,13 +45,13 @@ public class SoundManager : MonoBehaviour
     /* Game event subscription */
     private void OnEnable()
     {
-        SceneManager.sceneLoaded += HandleBGM_OnSceneLoad;
+        SceneManager.sceneLoaded += HandleSFX_OnSceneLoad;
         sfxEventChannel.Subscribe(TriggerGameplaySound);
     }
 
     private void OnDisable()
     {
-        SceneManager.sceneLoaded -= HandleBGM_OnSceneLoad;
+        SceneManager.sceneLoaded -= HandleSFX_OnSceneLoad;
         sfxEventChannel.Unsubscribe(TriggerGameplaySound);
     }
 
@@ -106,9 +106,18 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    private void HandleBGM_OnSceneLoad(Scene scene, LoadSceneMode mode)
+    private void StopLingeringOneShotSFX()
+    {
+        if (Instance.gameplayOneShotSource.isPlaying)
+        {
+            Instance.gameplayOneShotSource.Stop();
+        }
+    }
+
+    private void HandleSFX_OnSceneLoad(Scene scene, LoadSceneMode mode)
     {
         StopBGM();
+        StopLingeringOneShotSFX();
         PlayBGM();
     }
 
