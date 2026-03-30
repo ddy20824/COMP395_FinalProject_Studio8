@@ -14,7 +14,8 @@ public enum GameplaySFXType
     COOKING_END = 11,
     IS_COOKING = 12,
     ORDER_SUBMIT = 13,
-    UNBOX = 14
+    UNBOX = 14,
+    LEVEL_COMPLETE = 15
 }
 
 public enum UISFXType
