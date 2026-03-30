@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class SoundManager : MonoBehaviour
 {
     private static SoundManager instance;
+    private bool isBGM_On = true;
 
     [Header("SFX Resources")]
     [SerializeField] private AudioClip[] uiClips;
@@ -13,13 +14,17 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private float bgmVolume = 0.5f;
     private AudioSource uiSource;
     [SerializeField] private float uiVolume = 1.0f;
-    private AudioSource gameplaySource;
-    [SerializeField] private float gameplayVolume = 0.7f;
+    private AudioSource gameplayOneShotSource;
+    [SerializeField] private float gameplayOneShotVolume = 0.7f;
+    private AudioSource gameplayLoopingSource;
+    [SerializeField] private float gameplayLoopingVolume = 0.7f;
 
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel sfxEventChannel;
 
     public static SoundManager Instance { get => instance; private set => instance = value; }
+
+    public bool IsBGM_On { get => isBGM_On; }
 
     private void Awake()
     {
@@ -33,19 +38,20 @@ public class SoundManager : MonoBehaviour
 
         bgmSource = GetComponent<AudioSource>();
         uiSource = gameObject.AddComponent<AudioSource>();
-        gameplaySource = gameObject.AddComponent<AudioSource>();
+        gameplayOneShotSource = gameObject.AddComponent<AudioSource>();
+        gameplayLoopingSource = gameObject.AddComponent<AudioSource>();
     }
 
     /* Game event subscription */
     private void OnEnable()
     {
-        SceneManager.sceneLoaded += HandleBGM_OnSceneLoad;
+        SceneManager.sceneLoaded += HandleSFX_OnSceneLoad;
         sfxEventChannel.Subscribe(TriggerGameplaySound);
     }
 
     private void OnDisable()
     {
-        SceneManager.sceneLoaded -= HandleBGM_OnSceneLoad;
+        SceneManager.sceneLoaded -= HandleSFX_OnSceneLoad;
         sfxEventChannel.Unsubscribe(TriggerGameplaySound);
     }
 
@@ -60,7 +66,7 @@ public class SoundManager : MonoBehaviour
             case UISFXType.BGM1 or UISFXType.BGM2:
                 Instance.bgmSource.clip = Instance.uiClips[(int)type];
                 Instance.bgmSource.loop = true;
-                Instance.bgmSource.volume = bgmVolume;
+                Instance.bgmSource.volume = isBGM_On ? bgmVolume : 0.0f;
                 Instance.bgmSource.Play();
                 break;
             default:
@@ -80,6 +86,12 @@ public class SoundManager : MonoBehaviour
         }
     }
 
+    private void ToggleBGM(bool isOn)
+    {
+        isBGM_On = isOn;
+        Instance.bgmSource.volume = isBGM_On ? bgmVolume : 0.0f;
+    }
+
     private void PlayBGM()
     {
         string sceneName = SceneManager.GetActiveScene().name;
@@ -94,22 +106,83 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    private void HandleBGM_OnSceneLoad(Scene scene, LoadSceneMode mode)
+    private void StopLingeringOneShotSFX()
+    {
+        if (Instance.gameplayOneShotSource.isPlaying)
+        {
+            Instance.gameplayOneShotSource.Stop();
+        }
+    }
+
+    private void HandleSFX_OnSceneLoad(Scene scene, LoadSceneMode mode)
     {
         StopBGM();
+        StopLingeringOneShotSFX();
         PlayBGM();
     }
 
     // === Gameplay SFX Section ===
-    private void TriggerGameplaySound(GameplaySFXType type)
+    private void PlayOneShotGameplaySound(GameplaySFXType type)
     {
         AudioClip clip = Instance.gameplayClips[(int)type];
-        Instance.gameplaySource.PlayOneShot(clip, gameplayVolume);
+        Instance.gameplayOneShotSource.PlayOneShot(clip, gameplayOneShotVolume);
+    }
+
+    private void PlayLoopingGameplaySound(GameplaySFXType type)
+    {
+        AudioClip clip = Instance.gameplayClips[(int)type];
+
+        if (Instance.gameplayLoopingSource.clip == clip && Instance.gameplayLoopingSource.isPlaying)
+        {
+            return;
+        }
+
+        Instance.gameplayLoopingSource.clip = clip;
+        Instance.gameplayLoopingSource.loop = true;
+        Instance.gameplayLoopingSource.volume = gameplayOneShotVolume;
+        Instance.gameplayLoopingSource.Play();
+    }
+
+    private void TriggerGameplaySound(GameplaySFXType type)
+    {
+        switch (type)
+        {
+            case GameplaySFXType.IS_COOKING:
+                PlayLoopingGameplaySound(type);
+                break;
+            case GameplaySFXType.COOKING_END:
+                PlayOneShotGameplaySound(type);
+                StopGameplayLoopingSound(GameplaySFXType.IS_COOKING);
+                break;
+            default:
+                PlayOneShotGameplaySound(type);
+                break;
+        }
+        //AudioClip clip = Instance.gameplayClips[(int)type];
+        //Instance.gameplaySource.PlayOneShot(clip, gameplayVolume);
+    }
+
+    private void StopGameplayLoopingSound(GameplaySFXType type)
+    {
+        AudioClip current = Instance.gameplayLoopingSource.clip;
+        AudioClip clipToStop = Instance.gameplayClips[(int)type];
+
+        if (current == clipToStop)
+        {
+            Instance.gameplayLoopingSource.Stop();
+            Instance.gameplayLoopingSource.clip = null;
+            Instance.gameplayLoopingSource.loop = false;
+        }
     }
 
     /* Public action members */
     public void PlayBtnClickSound()
     {
         PlayUISound(UISFXType.BTN_CLICK);
+    }
+
+    public void ToggleGameMusic(bool isOn)
+    {
+        ToggleBGM(isOn);
     }
 }

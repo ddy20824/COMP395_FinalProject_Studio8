@@ -17,6 +17,7 @@ public class DragController : MonoBehaviour
     private Vector3 dragStartPosition;
     private Quaternion dragStartRotation;
     private Coroutine returnToStartRoutine;
+    private bool dragInteractionEnabled = true;
 
     void Start()
     {
@@ -27,13 +28,14 @@ public class DragController : MonoBehaviour
     {
         var mouse = Mouse.current;
         if (mouse == null) return;
+        if (!dragInteractionEnabled) return;
 
         // 1. Start dragging when left mouse button is pressed on the ingredient
         if (mouse.leftButton.wasPressedThisFrame)
         {
             Ray ray = Camera.main.ScreenPointToRay(mouse.position.ReadValue());
             int raycastMask = ~ignoredLayers.value;
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, raycastMask) &&
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, raycastMask, QueryTriggerInteraction.Ignore) &&
                 (hit.transform == transform || hit.transform.IsChildOf(transform)))
             {
                 StartDrag();
@@ -93,22 +95,33 @@ public class DragController : MonoBehaviour
         CursorManager.Instance.SetGrabCursor();
     }
 
+    public void SetDragInteractionEnabled(bool enabled)
+    {
+        dragInteractionEnabled = enabled;
+
+        if (!dragInteractionEnabled)
+        {
+            isDragging = false;
+            ClearAimedStorage();
+            ClearAimedStove();
+            CursorManager.Instance.SetNormalCursor();
+        }
+    }
+
     private void EndDrag()
     {
-        ResolveReleaseTargets(out CookController targetStove, out BaseStorage targetStorage);
-
         if (rb != null) rb.isKinematic = false; // Release hand to restore physics
 
-        bool canTryStove = targetStove != null && targetStove.CanAcceptIngredient();
+        bool canTryStove = currentAimedStove != null && currentAimedStove.CanAcceptIngredient();
         if (canTryStove)
         {
-            bool success = targetStove.TryAddIngredient(this.gameObject);
+            bool success = currentAimedStove.TryAddIngredient(this.gameObject);
             if (!success)
                 returnToStartRoutine = StartCoroutine(ReturnToDragStartPoint());
         }
-        else if (targetStorage != null)
+        else if (currentAimedStorage != null)
         {
-            targetStorage.StoreItem(this.gameObject);
+            currentAimedStorage.StoreItem(this.gameObject);
         }
 
         isDragging = false;
@@ -134,6 +147,10 @@ public class DragController : MonoBehaviour
                 SetAimedStorage(storage);
             }
         }
+        if (other.CompareTag("Ground"))
+        {
+            GetComponent<IngredientController>().SetOnFloor(true);
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -148,6 +165,10 @@ public class DragController : MonoBehaviour
                 if (currentAimedStorage == storage)
                     ClearAimedStorage();
             }
+        }
+        if (other.CompareTag("Ground"))
+        {
+            GetComponent<IngredientController>().SetOnFloor(false);
         }
     }
 
@@ -179,44 +200,6 @@ public class DragController : MonoBehaviour
 
         if (currentHoveredStove != null)
             currentHoveredStove.SetDraggingHoverState(true);
-    }
-
-    private void ResolveReleaseTargets(out CookController targetStove, out BaseStorage targetStorage)
-    {
-        targetStove = null;
-        targetStorage = null;
-
-        if (Camera.main == null || Mouse.current == null)
-        {
-            targetStove = currentAimedStove;
-            targetStorage = currentAimedStorage;
-            return;
-        }
-
-        Vector2 mousePos = Mouse.current.position.ReadValue();
-        Ray ray = Camera.main.ScreenPointToRay(mousePos);
-        int raycastMask = ~ignoredLayers.value;
-
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, raycastMask))
-        {
-            targetStove = hit.transform.GetComponentInParent<CookController>();
-
-            if (hit.collider != null &&
-                (hit.collider.CompareTag("Fridge") || hit.collider.CompareTag("GeneralStorage")))
-            {
-                targetStorage = hit.transform.GetComponentInParent<BaseStorage>();
-            }
-            else
-            {
-                targetStorage = hit.transform.GetComponentInParent<BaseStorage>();
-            }
-        }
-
-        if (targetStove == null)
-            targetStove = currentAimedStove;
-
-        if (targetStorage == null)
-            targetStorage = currentAimedStorage;
     }
 
     private void SetAimedStorage(BaseStorage storage)

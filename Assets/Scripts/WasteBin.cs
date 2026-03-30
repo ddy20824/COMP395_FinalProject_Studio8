@@ -4,7 +4,7 @@ using UnityEngine;
 public class WasteBin : MonoBehaviour
 {
     [Header("Events")]
-    [SerializeField] private IngredientTypeEventChannel _onIngredientTrashed;
+    [SerializeField] private IngredientTypeEventChannel _onFreshIngredientTrashed;
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
     [SerializeField] private VoidEventChannel trashBinBounceChannel;
 
@@ -32,15 +32,16 @@ public class WasteBin : MonoBehaviour
         // get the IngredientController component
         IngredientController ingredientController = other.GetComponent<IngredientController>();
 
-        // If there is no ingrediant
+        // If there is no ingredient
         if (ingredientController == null) return;
 
         // Fire the event
-        _onIngredientTrashed.Raise(ingredientController.GetIngredientType());
+        if (!ingredientController.IsRotted())
+        {
+            _onFreshIngredientTrashed.Raise(ingredientController.GetIngredientType());
+            Debug.Log($"Trashed: {ingredientController.GetIngredientType()}");
+        }
         CursorManager.Instance.SetNormalCursor();
-
-        //TODO: Just a log for now, UI can listen to this event for updateing the score
-        Debug.Log($"Trashed: {ingredientController.GetIngredientType()}");
 
         // Play bounce animation and sound effect
         PlayBounce();

@@ -14,12 +14,9 @@ public class Settings : BasePanel<Settings>
     }
     void Start()
     {
-        //button onclick: back to main
         btnBack.onClick.AddListener(() => {
             HideMe();
             MainMenu.Instance.ShowMe();
         });
-
-        // TODO: SFX - Maybe a checkbox boolean - MKP:2026/03/15
     }
 }

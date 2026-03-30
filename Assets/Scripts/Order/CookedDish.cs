@@ -83,7 +83,6 @@ public class CookedDish : MonoBehaviour
         if (isFlying || target == null) return false;
         StartCoroutine(FlyAndDestroy(target, false, -1));
         onTrashBinBounceChannel.Raise(); // Trigger the bounce effect on the trash bin
-        onDishDeliveredChannel.Raise(dishType); // Trigger any dish delivered events (e.g. for UI updates)
         return true;
     }
 
@@ -132,6 +131,7 @@ public class CookedDish : MonoBehaviour
             orderManager.CompleteOrder(orderIndex);
         }
 
+        onDishDeliveredChannel.Raise(dishType); // Trigger any dish delivered events (e.g. for UI updates)
         Destroy(gameObject);
     }
 }
