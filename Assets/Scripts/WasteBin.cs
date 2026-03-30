@@ -13,24 +13,67 @@ public class WasteBin : MonoBehaviour
     [SerializeField] private float bounceSpeed = 5f;
 
     private Vector3 initialScale;
+    private DragController currentDraggedItem;
+    private Collider binCollider;
 
     private void Awake()
     {
         initialScale = transform.localScale;
+        binCollider = GetComponent<Collider>();
     }
 
     // Subscribe to the bounce event when enabled, and unsubscribe when disabled
     private void OnEnable() => trashBinBounceChannel.Subscribe(PlayBounce);
     private void OnDisable() => trashBinBounceChannel.Unsubscribe(PlayBounce);
 
-    // When collide with the trash can
-    private void OnTriggerEnter(Collider other) => TrashIngrediant(other);
+    // Track when ingredients collide with bin
+    private void OnTriggerEnter(Collider other)
+    {
+        // Check if it's a dragged ingredient
+        DragController dragController = other.GetComponent<DragController>();
+        if (dragController != null && dragController.IsDragging)
+        {
+            currentDraggedItem = dragController;
+            return;
+        }
 
+        // Non-dragged items trash immediately
+        TrashIngrediant(other);
+    }
 
+    private void OnTriggerExit(Collider other)
+    {
+        DragController dragController = other.GetComponent<DragController>();
+        if (dragController != null && dragController == currentDraggedItem)
+        {
+            currentDraggedItem = null;
+        }
+    }
+
+    private void Update()
+    {
+        // Check if dragged item was released while still in bin
+        if (currentDraggedItem != null && !currentDraggedItem.IsDragging)
+        {
+            // Only trash if item is still overlapping bin bounds
+            Collider itemCollider = currentDraggedItem.GetComponent<Collider>();
+            if (itemCollider != null && binCollider != null && binCollider.bounds.Intersects(itemCollider.bounds))
+            {
+                TrashIngrediantObject(currentDraggedItem.gameObject);
+            }
+            currentDraggedItem = null;
+        }
+    }
     private void TrashIngrediant(Collider other)
     {
+        if (other == null) return;
+        TrashIngrediantObject(other.gameObject);
+    }
+
+    private void TrashIngrediantObject(GameObject ingredientObject)
+    {
         // get the IngredientController component
-        IngredientController ingredientController = other.GetComponent<IngredientController>();
+        IngredientController ingredientController = ingredientObject.GetComponent<IngredientController>();
 
         // If there is no ingredient
         if (ingredientController == null) return;
@@ -47,7 +90,7 @@ public class WasteBin : MonoBehaviour
         PlayBounce();
 
         // Destroy the ingredient
-        Destroy(other.gameObject);
+        Destroy(ingredientObject);
     }
 
     private void PlayBounce()
