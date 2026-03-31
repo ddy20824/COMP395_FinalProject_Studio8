@@ -19,6 +19,8 @@ public class DragController : MonoBehaviour
     private Coroutine returnToStartRoutine;
     private bool dragInteractionEnabled = true;
 
+    public bool IsDragging => isDragging;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -30,7 +32,7 @@ public class DragController : MonoBehaviour
         if (mouse == null) return;
         if (!dragInteractionEnabled) return;
 
-        // 1. Start dragging when left mouse button is pressed on the ingredient
+        // Start dragging when left mouse button is pressed on the ingredient
         if (mouse.leftButton.wasPressedThisFrame)
         {
             Ray ray = Camera.main.ScreenPointToRay(mouse.position.ReadValue());
@@ -42,14 +44,14 @@ public class DragController : MonoBehaviour
             }
         }
 
-        // 2. Update position while dragging
+        // Update position while dragging
         if (mouse.leftButton.isPressed && isDragging)
         {
             UpdatePositionOnSurface(mouse.position.ReadValue());
             UpdateStoveHoverByRaycast(mouse.position.ReadValue());
         }
 
-        // 3. Release
+        // Release
         if (mouse.leftButton.wasReleasedThisFrame && isDragging)
         {
             EndDrag();
