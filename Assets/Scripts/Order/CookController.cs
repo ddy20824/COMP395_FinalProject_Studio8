@@ -89,6 +89,8 @@ public class CookController : MonoBehaviour
 
     void Update()
     {
+        if (PauseMenu.Instance.IsPause) return; // Temporary UI fix for icon disappearing during game pause.
+
         var mouse = Mouse.current;
         if (mouse == null) return;
 

@@ -18,6 +18,8 @@ public class PauseMenu : BasePanel<PauseMenu>
 
     private bool isPause = false;
 
+    public bool IsPause { get { return isPause; } set { isPause = value; } } // Temporary fix for CookController Icon.
+
     protected override void Awake()
     {
         base.Awake();
@@ -104,7 +106,7 @@ public class PauseMenu : BasePanel<PauseMenu>
         BaseStorage[] storages = Object.FindObjectsByType<BaseStorage>(FindObjectsSortMode.None);
         BoxInteraction[] boxInteractions = Object.FindObjectsByType<BoxInteraction>(FindObjectsSortMode.None);
         OrderManager[] orderManagers = Object.FindObjectsByType<OrderManager>(FindObjectsSortMode.None);
-        CookController[] cookControllers = Object.FindObjectsByType<CookController>(FindObjectsSortMode.None);
+        //CookController[] cookControllers = Object.FindObjectsByType<CookController>(FindObjectsSortMode.None);
         CookedDish[] cookedDishes = Object.FindObjectsByType<CookedDish>(FindObjectsSortMode.None);
 
         scripts.AddRange(allDraggables);
@@ -112,7 +114,7 @@ public class PauseMenu : BasePanel<PauseMenu>
         scripts.AddRange(storages);
         scripts.AddRange(boxInteractions);
         scripts.AddRange(orderManagers);
-        scripts.AddRange(cookControllers);
+        //scripts.AddRange(cookControllers);
         scripts.AddRange(cookedDishes);
 
         return scripts;

@@ -28,6 +28,8 @@ public class BoxInteraction : MonoBehaviour
     private Coroutine spawnDelayCoroutine;
     private readonly List<GameObject> lockedIngredients = new List<GameObject>();
 
+    private bool isHovering = false;
+
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
     private void Awake()
@@ -38,6 +40,11 @@ public class BoxInteraction : MonoBehaviour
 
     private void Update()
     {
+        if (Mouse.current == null) return;
+
+        Vector2 mousePos = Mouse.current.position.ReadValue();
+        HandleHover(mousePos);
+
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
             TryOpenByScreenPoint(Mouse.current.position.ReadValue());
@@ -92,6 +99,7 @@ public class BoxInteraction : MonoBehaviour
 
         if (!HasObjectInsideBoxVolume())
         {
+            CursorManager.Instance.SetNormalCursor();
             Destroy(gameObject);
             onSFXRequest.Raise(GameplaySFXType.TRASH_INTO);
         }
@@ -277,5 +285,29 @@ public class BoxInteraction : MonoBehaviour
         Gizmos.color = HasObjectOnTop() ? Color.red : Color.green;
         Gizmos.matrix = Matrix4x4.TRS(center, Quaternion.identity, Vector3.one);
         Gizmos.DrawWireCube(Vector3.zero, halfExtents * 2f);
+    }
+
+    private void HandleHover(Vector2 screenPoint)
+    {
+        Ray ray = Camera.main.ScreenPointToRay(screenPoint);
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            if (hit.collider == selfCollider)
+            {
+                if (!isHovering)
+                {
+                    isHovering = true;
+                    CursorManager.Instance.SetPointerCursor();
+                }
+                return;
+            }
+        }
+
+        if (isHovering)
+        {
+            isHovering = false;
+            CursorManager.Instance.SetNormalCursor();
+        }
     }
 }
