@@ -17,7 +17,7 @@ public class GameConfig : ScriptableObject
 public class LevelDataContent
 {
     public Level levelName;
-    public float timeLimit;
+    public int timeLimit;
     public List<IngredientType> availableIngredients;
 
     public List<DishType> availableDishes;

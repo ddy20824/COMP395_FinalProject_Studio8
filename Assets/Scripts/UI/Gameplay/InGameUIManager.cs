@@ -26,7 +26,7 @@ public class InGameUIManager : MonoBehaviour
     private void Start()
     {
         // Set defaults immediately so HUD is populated before first events arrive.
-        UpdateClock(0, 0);
+        UpdateClock(Clock.Instance.GetMinutes(), Clock.Instance.GetSeconds());
         UpdateLevel();
         UpdateScore(0);
         SubscribeClock();

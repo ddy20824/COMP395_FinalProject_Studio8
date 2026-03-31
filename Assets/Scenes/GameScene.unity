@@ -1325,6 +1325,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e202a8c5b1d0d74fb044af40150d820, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Clock
+  gameConfig: {fileID: 11400000, guid: fae987cbdb15f8846b04294df40aa348, type: 2}
+  endGameEventChannel: {fileID: 11400000, guid: 1cb72bddd74ae5d468276e329e240ab0, type: 2}
 --- !u!4 &373677179
 Transform:
   m_ObjectHideFlags: 0
@@ -2303,6 +2305,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1303747356873861878, guid: 3707e3d1accfc514aa3eb8bb43d5d70e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6161516422412895901, guid: 3707e3d1accfc514aa3eb8bb43d5d70e, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -2386,6 +2392,10 @@ PrefabInstance:
     - target: {fileID: 8880427918608357174, guid: 3707e3d1accfc514aa3eb8bb43d5d70e, type: 3}
       propertyPath: m_Name
       value: InGameUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 8880427918608357174, guid: 3707e3d1accfc514aa3eb8bb43d5d70e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5085,6 +5095,7 @@ MonoBehaviour:
   - {fileID: 1096650800}
   testScore: 10
   onSFXRequest: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
+  endGameEventChannel: {fileID: 11400000, guid: 1cb72bddd74ae5d468276e329e240ab0, type: 2}
 --- !u!1 &1466413511
 GameObject:
   m_ObjectHideFlags: 0
