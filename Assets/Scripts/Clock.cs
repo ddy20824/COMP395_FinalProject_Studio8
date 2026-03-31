@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Clock : MonoBehaviour
 {
+    [SerializeField] private GameConfig gameConfig;
+    [SerializeField] private VoidEventChannel endGameEventChannel;
     private static Clock instance;
 
     private float timer = 0f;
@@ -23,6 +25,19 @@ public class Clock : MonoBehaviour
         instance = this;
     }
 
+    private void Start()
+    {
+        if (gameConfig != null)
+        {
+            seconds = gameConfig.allLevels.Find(x => x.levelName == GameSession.CurrentLevelIndex).timeLimit;
+            if (seconds >= 60)
+            {
+                minutes = seconds / 60;
+                seconds = seconds % 60;
+            }
+        }
+    }
+
     private void Update()
     {
         timer += Time.deltaTime;
@@ -36,14 +51,30 @@ public class Clock : MonoBehaviour
 
     private void AddSeconds()
     {
-        seconds++;
+        seconds--;
 
-        if (seconds >= 60)
+        if (minutes <= 0 && seconds < 0)
         {
-            seconds = 0;
-            minutes++;
+            endGameEventChannel?.Raise();
+            return;
+        }
+
+        if (seconds < 0)
+        {
+            seconds = 59;
+            minutes--;
         }
 
         OnTimeChanged?.Invoke(minutes, seconds);
+    }
+
+    public int GetSeconds()
+    {
+        return seconds;
+    }
+
+    public int GetMinutes()
+    {
+        return minutes;
     }
 }

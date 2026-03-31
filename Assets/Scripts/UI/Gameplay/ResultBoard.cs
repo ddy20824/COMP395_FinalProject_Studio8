@@ -25,6 +25,7 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
+    [SerializeField] private VoidEventChannel endGameEventChannel;
     protected override void Awake()
     {
         base.Awake();
@@ -42,9 +43,26 @@ public class ResultBoard : BasePanel<ResultBoard>
             BackToMainMenu();
         });
 
-        btnNextLevel.onClick.AddListener(() => {
+        btnNextLevel.onClick.AddListener(() =>
+        {
             GoNextLevel();
         });
+    }
+
+    private void OnEnable()
+    {
+        if (endGameEventChannel != null)
+        {
+            endGameEventChannel.Subscribe(ShowResultBoard);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (endGameEventChannel != null)
+        {
+            endGameEventChannel.Unsubscribe(ShowResultBoard);
+        }
     }
 
     private void Update()
@@ -72,6 +90,17 @@ public class ResultBoard : BasePanel<ResultBoard>
         // TODO: Implement Next Level
         ResetGameState();
         HideMe();
+    }
+
+    private void ShowResultBoard()
+    {
+        SoundManager.Instance.ToggleGameMusic(false);
+        onSFXRequest.Raise(GameplaySFXType.LEVEL_COMPLETE);
+        DisableAllGameInteractions();
+        PauseMenu.Instance.IsPause = true;
+        blurVolume.SetActive(true);
+        SetLevelSummary(testScore);
+        ShowMe();
     }
 
     //private List<MonoBehaviour> FindAllInteractionScripts()
@@ -134,7 +163,7 @@ public class ResultBoard : BasePanel<ResultBoard>
         }
         if (score >= 200)
         {
-            stars[1].sprite = starStates[1];           
+            stars[1].sprite = starStates[1];
         }
         if (score >= 100)
         {
