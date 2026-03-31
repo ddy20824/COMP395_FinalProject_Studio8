@@ -1257,8 +1257,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 95}
-  m_SizeDelta: {x: 280, y: 60}
+  m_AnchoredPosition: {x: 0, y: 100}
+  m_SizeDelta: {x: 300, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &667652645
 MonoBehaviour:
@@ -1280,7 +1280,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u2022 Cook \u2192 Serve orders\n\u2022 Save \u2192 Reduce waste"
+  m_text: "\u2022 <b>COOK</b>: Serve orders fast\n\u2022 <b>SAVE</b>: Reduce food
+    waste"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d55ed06f90f7523408a47c9097fe9d06, type: 2}
   m_sharedMaterial: {fileID: -1384473667007281794, guid: d55ed06f90f7523408a47c9097fe9d06, type: 2}
@@ -2717,8 +2718,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Drag to move items  \nRelease to interact  \n\nRight Click to rotate camera 
-    \nScroll to zoom"
+  m_text: '<b>Drag</b>: Move Items
+
+    <b>Release</b>: Interact / Drop
+
+    <b>Right
+    Click</b>: Rotate View
+
+    <b>Scroll</b>: Zoom In / Out'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d55ed06f90f7523408a47c9097fe9d06, type: 2}
   m_sharedMaterial: {fileID: -1384473667007281794, guid: d55ed06f90f7523408a47c9097fe9d06, type: 2}
@@ -2752,13 +2759,13 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: 20
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -2784,7 +2791,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 10, y: 0, z: 10, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -3446,7 +3453,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 125}
-  m_SizeDelta: {x: 340, y: 220}
+  m_SizeDelta: {x: 320, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1539412930
 MonoBehaviour:
@@ -3468,15 +3475,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'STEP 1: Drag 1-3 items into a Pan.
-
-    STEP 2: Click Pan to start cooking.
-
-    STEP
-    3: Click Dish to send to customers.
-
-    TRASH: Throw away rotten food and failed
-    dishes.'
+  m_text: "\u2022 <b>Drag 1-3 Items</b> to Pan\n\u2022 <b>Click Pan</b> to Start\n\u2022
+    <b>Click Dish</b> to Deliver\n\u2022 <b>TRASH</b> Failed Dishes"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d55ed06f90f7523408a47c9097fe9d06, type: 2}
   m_sharedMaterial: {fileID: -1384473667007281794, guid: d55ed06f90f7523408a47c9097fe9d06, type: 2}
@@ -3510,13 +3510,13 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: 20
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -3809,7 +3809,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 190}
-  m_SizeDelta: {x: 340, y: 110}
+  m_SizeDelta: {x: 340, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1605019941
 MonoBehaviour:
@@ -3831,7 +3831,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Cook fast. \nAchieve <b>ZERO WASTE</b>\nRun an efficient kitchen."
+  m_text: <b>Achieve ZERO WASTE</b>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d55ed06f90f7523408a47c9097fe9d06, type: 2}
   m_sharedMaterial: {fileID: -1384473667007281794, guid: d55ed06f90f7523408a47c9097fe9d06, type: 2}
@@ -3866,7 +3866,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -4283,7 +4283,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 125}
-  m_SizeDelta: {x: 340, y: 220}
+  m_SizeDelta: {x: 280, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1716168133
 MonoBehaviour:
@@ -4305,15 +4305,16 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'GREEN BAR: Watch the freshness meter.
+  m_text: '<b>Lifespan</b>: Green Bar
 
-    COLOR CHANGE: Food turns brown
-    when old.
+    <b>Alert</b>: Browning
 
-    SPEED: Fridge is Slow, Floor is Fast.
+    <b>Fridge</b>:
+    0.2x Decay
 
-    FIFO: Use the oldest
-    food first!'
+    <b>Floor</b>: 3.0x Decay
+
+    <b>FIFO</b>: Use Oldest First'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d55ed06f90f7523408a47c9097fe9d06, type: 2}
   m_sharedMaterial: {fileID: -1384473667007281794, guid: d55ed06f90f7523408a47c9097fe9d06, type: 2}
@@ -4340,8 +4341,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
+  m_fontSize: 26
+  m_fontSizeBase: 26
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -4353,7 +4354,7 @@ MonoBehaviour:
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: 20
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
