@@ -54,6 +54,7 @@ public class ResultBoard : BasePanel<ResultBoard>
             SoundManager.Instance.ToggleGameMusic(false);
             onSFXRequest.Raise(GameplaySFXType.LEVEL_COMPLETE);
             DisableAllGameInteractions();
+            PauseMenu.Instance.IsPause = true;
             blurVolume.SetActive(true);
             SetLevelSummary(testScore);
             ShowMe();
@@ -168,6 +169,7 @@ public class ResultBoard : BasePanel<ResultBoard>
         blurVolume.SetActive(false);
         pauseMenuScript.enabled = true;
         btnSettings.enabled = true;
+        PauseMenu.Instance.IsPause = false;
     }
 
     private void TestUI() // Only for testing
