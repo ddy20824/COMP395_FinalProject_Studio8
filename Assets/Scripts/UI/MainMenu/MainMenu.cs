@@ -6,6 +6,7 @@ public class MainMenu : BasePanel<MainMenu>
 {
     [SerializeField] private Button btnStart;
     [SerializeField] private Button btnSettings;
+    [SerializeField] private Button btnTutorial;
     [SerializeField] private Button btnQuit;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -20,6 +21,12 @@ public class MainMenu : BasePanel<MainMenu>
         {
             HideMe();
             Settings.Instance.ShowMe();
+        });
+
+        btnTutorial.onClick.AddListener(() =>
+        {
+            HideMe();
+            Tutorial.Instance.ShowMe();
         });
 
         btnQuit.onClick.AddListener(() =>
