@@ -16,6 +16,8 @@ public class ResultBoard : BasePanel<ResultBoard>
     [SerializeField] private TextMeshProUGUI successfulDish;
     [SerializeField] private TextMeshProUGUI failedDish;
     [SerializeField] private TextMeshProUGUI rottenIngr;
+    [SerializeField] private TextMeshProUGUI wastedIngr;
+    [SerializeField] private TextMeshProUGUI uncleanedIngr;
     [SerializeField] private TextMeshProUGUI totalScore;
     [SerializeField] private TextMeshProUGUI freeAdvice;
     [SerializeField] private GameObject blurVolume;
@@ -152,21 +154,39 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void SetAdvice(int score)
     {
-        if (score >= 500)
+        // if (score >= 500)
+        // {
+        //     freeAdvice.text = "You did a great job!";
+        // }
+        // else if (score >= 200)
+        // {
+        //     freeAdvice.text = "Good job! Pay attention to the expiring resources in the box to prevent rotten ingredients.";
+        // }
+        // else if (score >= 100)
+        // {
+        //     freeAdvice.text = "Well done! Don't waste too much food mkay!";
+        // }
+        // else
+        // {
+        //     freeAdvice.text = "Don't worry! An environmentalist will contact you shortly.";
+        // }
+
+        //TODO: add carbonImpact in GameConfig
+        FinalScoreData scoreData = scoreManager.getFinalScoreData();
+
+        int totalWastedCount = scoreData.rottenIngredientCount + scoreData.wastedIngredientCount;
+
+        if (totalWastedCount > 0)
         {
-            freeAdvice.text = "You did a great job!";
-        }
-        else if (score >= 200)
-        {
-            freeAdvice.text = "Good job! Pay attention to the expiring resources in the box to prevent rotten ingredients.";
-        }
-        else if (score >= 100)
-        {
-            freeAdvice.text = "Well done! Don't waste too much food mkay!";
+            // 1 ham waste = 20 km driven by a car (based on some carbon footprint data)
+            float carbonDistance = totalWastedCount * 20f;
+
+            freeAdvice.text = $"Your food waste created enough $CO_2$ to drive a car for <color=red>{carbonDistance:F1} km</color>. " +
+                              "Think about the planet, Chef!";
         }
         else
         {
-            freeAdvice.text = "Don't worry! An environmentalist will contact you shortly.";
+            freeAdvice.text = "Zero Waste! You saved the planet today. Even the polar bears are cheering for you!";
         }
     }
 
@@ -207,8 +227,8 @@ public class ResultBoard : BasePanel<ResultBoard>
         failedDish.text = $"{scoreData.failedDishCount} x {gameConfig.penaltyScore.failureDish} = -{scoreData.failedDishPenalty}";
 
         rottenIngr.text = $"{scoreData.rottenIngredientCount} x {gameConfig.penaltyScore.rottenIngredient} = -{scoreData.rottenIngredientPenalty}";
-        // TODO: Displaying wasted ingredient penalty
-        // wastedIngr.text = $"Wasted: {scoreData.wastedIngredientCount} x {gameConfig.penaltyScore.wastedIngredient} = -{scoreData.wastedIngredientPenalty}";
+        wastedIngr.text = $"{scoreData.wastedIngredientCount} x {gameConfig.penaltyScore.wastedIngredient} = -{scoreData.wastedIngredientPenalty}";
+        uncleanedIngr.text = $"{scoreData.levelEndRottenCount} x {gameConfig.penaltyScore.leftRottenIngredient} = -{scoreData.levelEndRottenPenalty}";
 
         totalScore.text = $"{scoreData.totalScore}";
     }
