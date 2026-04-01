@@ -32,6 +32,7 @@ public class Tutorial : BasePanel<Tutorial>
         btnClose.onClick.AddListener(() =>
         {
             currentPageIndex = 0;
+            UpdatePageVisibility();
             HideMe();
             MainMenu.Instance.ShowMe();
         });
