@@ -7,9 +7,11 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private GameObject inGameUI;
 
     [Header("Events")]
     [SerializeField] private IntTypeEventChannel onScoreChangedChannel;
+    [SerializeField] private VoidEventChannel endGameEventChannel;
 
     private bool isClockSubscribed;
 
@@ -20,6 +22,10 @@ public class InGameUIManager : MonoBehaviour
         if (onScoreChangedChannel != null)
         {
             onScoreChangedChannel.Subscribe(UpdateScore);
+        }
+        if (endGameEventChannel != null)
+        {
+            endGameEventChannel.Subscribe(HideInGameUI);
         }
     }
 
@@ -89,6 +95,14 @@ public class InGameUIManager : MonoBehaviour
         if (scoreText != null)
         {
             scoreText.text = score.ToString();
+        }
+    }
+
+    private void HideInGameUI()
+    {
+        if (inGameUI != null)
+        {
+            inGameUI.SetActive(false);
         }
     }
 }

@@ -22,6 +22,8 @@ public class ResultBoard : BasePanel<ResultBoard>
     [SerializeField] private Sprite[] starStates;
     [SerializeField] private Image[] stars;
     [SerializeField] private int testScore = 10;
+    [SerializeField] private ScoreManager scoreManager;
+    [SerializeField] private GameConfig gameConfig;
 
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
@@ -36,8 +38,6 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void Start()
     {
-        TestUI(); // Only for testing
-
         btnBackToMain.onClick.AddListener(() =>
         {
             BackToMainMenu();
@@ -67,15 +67,10 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void Update()
     {
+        // For testing purposes, press F to show the result board
         if (Keyboard.current.fKey.wasPressedThisFrame)
         {
-            SoundManager.Instance.ToggleGameMusic(false);
-            onSFXRequest.Raise(GameplaySFXType.LEVEL_COMPLETE);
-            DisableAllGameInteractions();
-            PauseMenu.Instance.IsPause = true;
-            blurVolume.SetActive(true);
-            SetLevelSummary(testScore);
-            ShowMe();
+            ShowResultBoard();
         }
     }
 
@@ -87,44 +82,27 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void GoNextLevel()
     {
-        // TODO: Implement Next Level
         ResetGameState();
         HideMe();
+        // TODO: Implement Next Level
+        // For testing, reload the same scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private void ShowResultBoard()
     {
         SoundManager.Instance.ToggleGameMusic(false);
         onSFXRequest.Raise(GameplaySFXType.LEVEL_COMPLETE);
+
+        scoreManager.ApplyRottenPenaltyAtLevelEnd();
+
         DisableAllGameInteractions();
         PauseMenu.Instance.IsPause = true;
         blurVolume.SetActive(true);
-        SetLevelSummary(testScore);
+
+        SetLevelSummary(scoreManager.getFinalScoreData().totalScore);
         ShowMe();
     }
-
-    //private List<MonoBehaviour> FindAllInteractionScripts()
-    //{
-    //    List<MonoBehaviour> scripts = new List<MonoBehaviour>();
-
-    //    DragController[] allDraggables = Object.FindObjectsByType<DragController>(FindObjectsSortMode.None);
-    //    IngredientController[] allIngredients = Object.FindObjectsByType<IngredientController>(FindObjectsSortMode.None);
-    //    BaseStorage[] storages = Object.FindObjectsByType<BaseStorage>(FindObjectsSortMode.None);
-    //    BoxInteraction[] boxInteractions = Object.FindObjectsByType<BoxInteraction>(FindObjectsSortMode.None);
-    //    OrderManager[] orderManagers = Object.FindObjectsByType<OrderManager>(FindObjectsSortMode.None);
-    //    CookController[] cookControllers = Object.FindObjectsByType<CookController>(FindObjectsSortMode.None);
-    //    CookedDish[] cookedDishes = Object.FindObjectsByType<CookedDish>(FindObjectsSortMode.None);
-
-    //    scripts.AddRange(allDraggables);
-    //    scripts.AddRange(allIngredients);
-    //    scripts.AddRange(storages);
-    //    scripts.AddRange(boxInteractions);
-    //    scripts.AddRange(orderManagers);
-    //    scripts.AddRange(cookControllers);
-    //    scripts.AddRange(cookedDishes);
-
-    //    return scripts;
-    //}
 
     private void DisableAllGameInteractions()
     {
@@ -153,6 +131,7 @@ public class ResultBoard : BasePanel<ResultBoard>
     {
         SetStars(score);
         SetAdvice(score);
+        setScoreDetail();
     }
 
     private void SetStars(int score)
@@ -201,11 +180,36 @@ public class ResultBoard : BasePanel<ResultBoard>
         PauseMenu.Instance.IsPause = false;
     }
 
-    private void TestUI() // Only for testing
+    private void setScoreDetail()
     {
-        successfulDish.text = $"3 x 100 = 300";
-        failedDish.text = $"1 x 50 = -50";
-        rottenIngr.text = $"10 x 10 = -100";
-        totalScore.text = "150";
+        FinalScoreData scoreData = scoreManager.getFinalScoreData();
+
+        // Dish completion details
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+        if (scoreData.dishCompletionData != null && scoreData.dishCompletionData.Count > 0)
+        {
+            foreach (var data in scoreData.dishCompletionData)
+            {
+                int unitScore = data.deliveredCount > 0 ? data.scoreGained / data.deliveredCount : 0;
+                sb.AppendLine($"{data.deliveredCount} x {unitScore} = {data.scoreGained}");
+                // sb.AppendLine($"{data.dishType}: {data.deliveredCount} x {unitScore} = {data.scoreGained}");
+            }
+        }
+        else
+        {
+            sb.Append("No dishes delivered: 0");
+        }
+
+        successfulDish.text = sb.ToString();
+
+        // Dealing with failed dishes and rotten ingredients
+        failedDish.text = $"{scoreData.failedDishCount} x {gameConfig.penaltyScore.failureDish} = -{scoreData.failedDishPenalty}";
+
+        rottenIngr.text = $"{scoreData.rottenIngredientCount} x {gameConfig.penaltyScore.rottenIngredient} = -{scoreData.rottenIngredientPenalty}";
+        // TODO: Displaying wasted ingredient penalty
+        // wastedIngr.text = $"Wasted: {scoreData.wastedIngredientCount} x {gameConfig.penaltyScore.wastedIngredient} = -{scoreData.wastedIngredientPenalty}";
+
+        totalScore.text = $"{scoreData.totalScore}";
     }
 }
