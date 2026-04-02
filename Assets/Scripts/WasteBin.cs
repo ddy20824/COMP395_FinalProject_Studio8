@@ -15,11 +15,14 @@ public class WasteBin : MonoBehaviour
     private Vector3 initialScale;
     private DragController currentDraggedItem;
     private Collider binCollider;
+    private Outline outline;
 
     private void Awake()
     {
         initialScale = transform.localScale;
         binCollider = GetComponent<Collider>();
+        outline = GetComponent<Outline>();
+        SetOutline(false);
     }
 
     // Subscribe to the bounce event when enabled, and unsubscribe when disabled
@@ -29,6 +32,7 @@ public class WasteBin : MonoBehaviour
     // Track when ingredients collide with bin
     private void OnTriggerEnter(Collider other)
     {
+        SetOutline(true);
         // Check if it's a dragged ingredient
         DragController dragController = other.GetComponent<DragController>();
         if (dragController != null && dragController.IsDragging)
@@ -43,10 +47,20 @@ public class WasteBin : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        SetOutline(false);
         DragController dragController = other.GetComponent<DragController>();
         if (dragController != null && dragController == currentDraggedItem)
         {
             currentDraggedItem = null;
+        }
+    }
+
+    private void SetOutline(bool show)
+    {
+        if (outline != null)
+        {
+            outline.enabled = show;
+            outline.OutlineWidth = 10f;
         }
     }
 
@@ -67,6 +81,7 @@ public class WasteBin : MonoBehaviour
     private void TrashIngrediant(Collider other)
     {
         if (other == null) return;
+        SetOutline(false);
         TrashIngrediantObject(other.gameObject);
     }
 
