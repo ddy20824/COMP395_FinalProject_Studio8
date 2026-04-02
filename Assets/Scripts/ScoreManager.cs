@@ -11,15 +11,18 @@ public class FinalScoreData
 
     public int dishScoreGained;
     public int failedDishPenalty;
+    public int noOrderDishPenalty;
     public int rottenIngredientPenalty;
     public int wastedIngredientPenalty;
     public int levelEndRottenPenalty;
 
     public int deliveredDishCount;
     public int failedDishCount;
+    public int noOrderDishCount;
     public int rottenIngredientCount;
     public int wastedIngredientCount;
     public int levelEndRottenCount;
+    public float totalCarbonDistance;
 
     public List<DishCompletionData> dishCompletionData;
 }
@@ -38,6 +41,7 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private IntTypeEventChannel onScoreChangedChannel;
     [SerializeField] private IngredientTypeEventChannel onIngredientRottenChannel;
     [SerializeField] private DishTypeEventChannel onDishDeliveredChannel;
+    [SerializeField] private DishTypeEventChannel onDishWastedChannel;
     [SerializeField] private IngredientTypeEventChannel onFreshIngredientTrashedChannel;
 
     [Header("Config")]
@@ -52,15 +56,18 @@ public class ScoreManager : MonoBehaviour
     private int totalNegativeScore;
     private int dishScoreGained;
     private int failedDishPenalty;
+    private int noOrderDishPenalty;
     private int rottenIngredientPenalty;
     private int wastedIngredientPenalty;
     private int levelEndRottenPenalty;
 
     private int deliveredDishCount;
     private int failedDishCount;
+    private int noOrderDishCount;
     private int rottenIngredientCount;
     private int wastedIngredientCount;
     private int levelEndRottenCount;
+    private float totalCarbonDistance;
 
     private readonly Dictionary<DishType, int> deliveredDishCountByType = new Dictionary<DishType, int>();
     private readonly Dictionary<DishType, int> deliveredDishScoreByType = new Dictionary<DishType, int>();
@@ -69,12 +76,14 @@ public class ScoreManager : MonoBehaviour
     {
         onIngredientRottenChannel.Subscribe(HandleIngredientRotten);
         onDishDeliveredChannel.Subscribe(HandleDishDelivered);
+        onDishWastedChannel.Subscribe(HandleDishWaste);
         onFreshIngredientTrashedChannel.Subscribe(HandleFreshIngredientTrashed);
     }
     private void OnDisable()
     {
         onIngredientRottenChannel.Unsubscribe(HandleIngredientRotten);
         onDishDeliveredChannel.Unsubscribe(HandleDishDelivered);
+        onDishWastedChannel.Unsubscribe(HandleDishWaste);
         onFreshIngredientTrashedChannel.Unsubscribe(HandleFreshIngredientTrashed);
     }
 
@@ -86,14 +95,17 @@ public class ScoreManager : MonoBehaviour
         totalNegativeScore = 0;
         dishScoreGained = 0;
         failedDishPenalty = 0;
+        noOrderDishPenalty = 0;
         rottenIngredientPenalty = 0;
         wastedIngredientPenalty = 0;
         levelEndRottenPenalty = 0;
         deliveredDishCount = 0;
         failedDishCount = 0;
+        noOrderDishCount = 0;
         rottenIngredientCount = 0;
         wastedIngredientCount = 0;
         levelEndRottenCount = 0;
+        totalCarbonDistance = 0f;
 
         deliveredDishCountByType.Clear();
         deliveredDishScoreByType.Clear();
@@ -139,6 +151,38 @@ public class ScoreManager : MonoBehaviour
                 HandleScoreUpdate(dishMapping.scoreValue);
             }
         }
+    }
+
+    // 處理成品料理（含失敗料理）進垃圾桶
+    public void HandleDishWaste(DishType type)
+    {
+        DishTypeMapping mapping = gameConfig.dishTypeMappings.Find(m => m.type == type);
+        float dishCarbonDist = 0f;
+        int penalty;
+
+        if (type == DishType.FailedDish)
+        {
+            penalty = gameConfig.penaltyScore.failureDish;
+            failedDishCount++;
+            failedDishPenalty += penalty;
+
+            dishCarbonDist = 30f;
+            Debug.Log($"Failed Dish Wasted - Score Penalty Applied: {penalty}");
+        }
+        else
+        {
+            penalty = gameConfig.penaltyScore.noOrderDish;
+            noOrderDishCount++;
+            noOrderDishPenalty += penalty;
+
+            int ingredientCount = mapping != null ? mapping.requiredIngredients.Count : 0;
+            dishCarbonDist = (ingredientCount * 20f) + 10f;
+
+            Debug.Log($"Dish Wasted With No Order: {type} - Score Penalty Applied: {penalty}");
+        }
+
+        totalCarbonDistance += dishCarbonDist;
+        HandleScoreUpdate(-penalty);
     }
 
     private void HandleFreshIngredientTrashed(IngredientType ingredientType)
@@ -233,14 +277,17 @@ public class ScoreManager : MonoBehaviour
             totalNegativeScore = totalNegativeScore,
             dishScoreGained = dishScoreGained,
             failedDishPenalty = failedDishPenalty,
+            noOrderDishPenalty = noOrderDishPenalty,
             rottenIngredientPenalty = rottenIngredientPenalty,
             wastedIngredientPenalty = wastedIngredientPenalty,
             levelEndRottenPenalty = levelEndRottenPenalty,
             deliveredDishCount = deliveredDishCount,
             failedDishCount = failedDishCount,
+            noOrderDishCount = noOrderDishCount,
             rottenIngredientCount = rottenIngredientCount,
             wastedIngredientCount = wastedIngredientCount,
             levelEndRottenCount = levelEndRottenCount,
+            totalCarbonDistance = totalCarbonDistance,
             dishCompletionData = BuildDishCompletionData()
         };
     }

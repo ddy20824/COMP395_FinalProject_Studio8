@@ -15,6 +15,7 @@ public class ResultBoard : BasePanel<ResultBoard>
     [SerializeField] private Button btnBackToMain;
     [SerializeField] private TextMeshProUGUI successfulDish;
     [SerializeField] private TextMeshProUGUI failedDish;
+    [SerializeField] private TextMeshProUGUI noOrderedDish;
     [SerializeField] private TextMeshProUGUI rottenIngr;
     [SerializeField] private TextMeshProUGUI wastedIngr;
     [SerializeField] private TextMeshProUGUI uncleanedIngr;
@@ -174,14 +175,9 @@ public class ResultBoard : BasePanel<ResultBoard>
         //TODO: add carbonImpact in GameConfig
         FinalScoreData scoreData = scoreManager.getFinalScoreData();
 
-        int totalWastedCount = scoreData.rottenIngredientCount + scoreData.wastedIngredientCount;
-
-        if (totalWastedCount > 0)
+        if (scoreData.totalCarbonDistance > 0f)
         {
-            // 1 ham waste = 20 km driven by a car (based on some carbon footprint data)
-            float carbonDistance = totalWastedCount * 20f;
-
-            freeAdvice.text = $"Your food waste created enough $CO_2$ to drive a car for <color=red>{carbonDistance:F1} km</color>. " +
+            freeAdvice.text = $"Your food waste created enough CO2 to drive a car for <color=red>{scoreData.totalCarbonDistance:F1} km</color>. " +
                               "Think about the planet, Chef!";
         }
         else
@@ -224,7 +220,8 @@ public class ResultBoard : BasePanel<ResultBoard>
         successfulDish.text = sb.ToString();
 
         // Dealing with failed dishes and rotten ingredients
-        failedDish.text = $"{scoreData.failedDishCount} x {gameConfig.penaltyScore.failureDish} = -{scoreData.failedDishPenalty}";
+        failedDish.text = $"Failed: {scoreData.failedDishCount} x {gameConfig.penaltyScore.failureDish} = -{scoreData.failedDishPenalty}";
+        noOrderedDish.text = $"No Order: {scoreData.noOrderDishCount} x {gameConfig.penaltyScore.noOrderDish} = -{scoreData.noOrderDishPenalty}";
 
         rottenIngr.text = $"{scoreData.rottenIngredientCount} x {gameConfig.penaltyScore.rottenIngredient} = -{scoreData.rottenIngredientPenalty}";
         wastedIngr.text = $"{scoreData.wastedIngredientCount} x {gameConfig.penaltyScore.wastedIngredient} = -{scoreData.wastedIngredientPenalty}";

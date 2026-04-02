@@ -58,4 +58,5 @@ public class PenaltyScore
     public int wastedIngredient = 30;
     public int leftRottenIngredient = 30;
     public int failureDish = 50;
+    public int noOrderDish = 30;
 }
