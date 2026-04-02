@@ -16,11 +16,12 @@ public abstract class BaseStorage : MonoBehaviour
     protected bool IsFull => storedItems.Count >= maxCapacity;
 
     protected Collider selfCollider;
+    protected Outline outline;
 
     protected virtual void Start()
     {
         selfCollider = GetComponent<Collider>();
-        Outline outline = GetComponentInChildren<Outline>();
+        outline = GetComponentInChildren<Outline>();
         if (outline != null)
         {
             outline.enabled = false;
@@ -38,7 +39,6 @@ public abstract class BaseStorage : MonoBehaviour
     {
         Debug.Log($"{name} ToggleHighlight: {show}");
 
-        Outline outline = GetComponentInChildren<Outline>();
         if (outline != null)
         {
             outline.enabled = show;
