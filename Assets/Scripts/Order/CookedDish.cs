@@ -17,6 +17,8 @@ public class CookedDish : MonoBehaviour
     private CookController sourceStation;
     private Transform trashTargetPoint;
     private bool isFlying = false;
+    private bool hasReservedOrder = false;
+    private int reservedOrderIndex = -1;
 
     // This method is called right after instantiating the cooked dish prefab, to set up necessary references and data for its behavior
     public void Setup(bool success, int orderIndex, OrderManager manager, CookController station, Transform trashPoint, DishType type)
@@ -54,17 +56,19 @@ public class CookedDish : MonoBehaviour
             return;
         }
 
-        int latestOrderIndex = orderManager.FindActiveOrderIndexByDishType(dishType);
-
-        if (latestOrderIndex != -1)
+        if (orderManager != null && orderManager.TryReserveOrderByDishType(dishType, out int latestOrderIndex, out Transform targetOrderTransform))
         {
-            Transform targetOrderTransform = orderManager.GetOrderTransform(latestOrderIndex);
             if (targetOrderTransform != null)
             {
+                hasReservedOrder = true;
+                reservedOrderIndex = latestOrderIndex;
                 // fly to the order position, and complete the order after arrival
                 StartCoroutine(FlyAndDestroy(targetOrderTransform, true, latestOrderIndex));
                 return;
             }
+
+            // Unexpected edge case: release reservation if target becomes invalid before flight starts.
+            orderManager.ReleaseOrderReservation(latestOrderIndex);
         }
 
         // If we can't find a valid order , just fly to the trash as a fallback
@@ -73,6 +77,8 @@ public class CookedDish : MonoBehaviour
 
     private void GoToTrash()
     {
+        ReleaseReservationIfAny();
+
         if (sourceStation != null)
             sourceStation.ClearFinishedDish(trashTargetPoint);
         else
@@ -82,6 +88,9 @@ public class CookedDish : MonoBehaviour
     public bool TryFlyToTrash(Transform target)
     {
         if (isFlying || target == null) return false;
+
+        ReleaseReservationIfAny();
+
         StartCoroutine(FlyAndDestroy(target, false, -1));
         onTrashBinBounceChannel.Raise(); // Trigger the bounce effect on the trash bin
         return true;
@@ -127,16 +136,43 @@ public class CookedDish : MonoBehaviour
             yield return null;
         }
 
-        if (completeOrderAfterArrival && orderManager != null)
+        if (completeOrderAfterArrival && orderManager != null && hasReservedOrder && reservedOrderIndex == orderIndex)
         {
-            orderManager.CompleteOrder(orderIndex);
-            onDishDeliveredChannel.Raise(dishType); // Trigger order-delivered score updates
+            bool completed = orderManager.TryCompleteReservedOrder(orderIndex);
+
+            if (completed)
+            {
+                onDishDeliveredChannel.Raise(dishType); // Trigger order-delivered score updates
+            }
+            else
+            {
+                onDishWastedChannel.Raise(dishType); // Reservation became invalid before arrival.
+            }
         }
         else
         {
             onDishWastedChannel.Raise(dishType); // Trigger trash/waste score updates
         }
 
+        hasReservedOrder = false;
+        reservedOrderIndex = -1;
+
         Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        ReleaseReservationIfAny();
+    }
+
+    private void ReleaseReservationIfAny()
+    {
+        if (!hasReservedOrder) return;
+
+        if (orderManager != null)
+            orderManager.ReleaseOrderReservation(reservedOrderIndex);
+
+        hasReservedOrder = false;
+        reservedOrderIndex = -1;
     }
 }
