@@ -10,6 +10,7 @@ public class CookedDish : MonoBehaviour
     [Header("Events")]
     [SerializeField] private VoidEventChannel onTrashBinBounceChannel;
     [SerializeField] private DishTypeEventChannel onDishDeliveredChannel;
+    [SerializeField] private DishTypeEventChannel onDishWastedChannel;
     private bool isSuccess;
     private DishType dishType;
     private OrderManager orderManager;
@@ -129,9 +130,13 @@ public class CookedDish : MonoBehaviour
         if (completeOrderAfterArrival && orderManager != null)
         {
             orderManager.CompleteOrder(orderIndex);
+            onDishDeliveredChannel.Raise(dishType); // Trigger order-delivered score updates
+        }
+        else
+        {
+            onDishWastedChannel.Raise(dishType); // Trigger trash/waste score updates
         }
 
-        onDishDeliveredChannel.Raise(dishType); // Trigger any dish delivered events (e.g. for UI updates)
         Destroy(gameObject);
     }
 }

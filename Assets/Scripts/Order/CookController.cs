@@ -273,9 +273,18 @@ public class CookController : MonoBehaviour
         if (uiRoot != null)
             uiRoot.SetActive(true);
 
-        bool isMatch = orderManager.CheckMatchAndReserve(currentIngredients, out DishTypeMapping matchedDish, out int targetOrderIndex);
-        float resolvedCookTime = isMatch && matchedDish != null
-            ? Mathf.Max(0.1f, matchedDish.cookingTime)
+        bool isLevelDish = orderManager.TryFindLevelDishByIngredients(currentIngredients, out DishTypeMapping levelDish);
+        bool hasMatchingOrder = false;
+        DishTypeMapping matchedDish = null;
+        int targetOrderIndex = -1;
+
+        if (isLevelDish)
+        {
+            hasMatchingOrder = orderManager.CheckMatchAndReserve(currentIngredients, out matchedDish, out targetOrderIndex);
+        }
+
+        float resolvedCookTime = isLevelDish && levelDish != null
+            ? Mathf.Max(0.1f, levelDish.cookingTime)
             : Mathf.Max(0.1f, config.failedDishCookTime);
 
         // Start cooking animation and wait for it to finish
@@ -306,7 +315,7 @@ public class CookController : MonoBehaviour
             panMesh.localPosition = originalPanLocalPos;
         }
 
-        GameObject prefabToSpawn = isMatch && matchedDish != null ? matchedDish.prefab : config.failureDishPrefab;
+        GameObject prefabToSpawn = isLevelDish && levelDish != null ? levelDish.prefab : config.failureDishPrefab;
         if (prefabToSpawn == null)
         {
             Debug.LogWarning("CookController: Missing dish prefab to spawn.");
@@ -321,8 +330,8 @@ public class CookController : MonoBehaviour
         currentFinishedDish = Instantiate(prefabToSpawn, panDropPoint.position + Vector3.up * dishOffsetY, panDropPoint.rotation);
         if (currentFinishedDish.TryGetComponent(out CookedDish dishController))
         {
-            DishType type = isMatch ? matchedDish.type : DishType.FailedDish;
-            dishController.Setup(isMatch, targetOrderIndex, orderManager, this, trashPoint, type);
+            DishType type = isLevelDish && levelDish != null ? levelDish.type : DishType.FailedDish;
+            dishController.Setup(hasMatchingOrder, targetOrderIndex, orderManager, this, trashPoint, type);
         }
 
         currentIngredients.Clear();

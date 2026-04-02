@@ -175,6 +175,30 @@ public class OrderManager : MonoBehaviour
         return false;
     }
 
+    public bool TryFindLevelDishByIngredients(List<IngredientMapping> currentIngredients, out DishTypeMapping matchedDish)
+    {
+        matchedDish = null;
+
+        List<IngredientType> panIngredients = new List<IngredientType>();
+        foreach (var map in currentIngredients)
+        {
+            panIngredients.Add(map.type);
+        }
+
+        for (int i = 0; i < availableDishes.Count; i++)
+        {
+            DishType dishType = availableDishes[i];
+            DishTypeMapping dishMapping = gameConfig.dishTypeMappings.Find(d => d.type == dishType);
+            if (dishMapping != null && AreIngredientsEqual(panIngredients, dishMapping.requiredIngredients))
+            {
+                matchedDish = dishMapping;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public Transform GetOrderTransform(int index)
     {
         if (index >= 0 && index < activeOrders.Length && activeOrders[index] != null)
