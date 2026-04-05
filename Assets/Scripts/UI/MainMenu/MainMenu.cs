@@ -14,7 +14,8 @@ public class MainMenu : BasePanel<MainMenu>
         btnStart.onClick.AddListener(() =>
         {
             // TODO: SFX
-            SceneManager.LoadScene("GameScene");
+            HideMe();
+            LevelSelect.Instance.ShowMe();
         });
 
         btnSettings.onClick.AddListener(() =>

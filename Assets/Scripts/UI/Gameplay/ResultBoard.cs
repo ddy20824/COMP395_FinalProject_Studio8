@@ -58,6 +58,10 @@ public class ResultBoard : BasePanel<ResultBoard>
         {
             endGameEventChannel.Subscribe(ShowResultBoard);
         }
+        if (GameSession.CurrentLevelIndex == Level.Level3)
+        {
+            btnNextLevel.gameObject.SetActive(false);
+        }
     }
 
     private void OnDisable()
@@ -87,9 +91,8 @@ public class ResultBoard : BasePanel<ResultBoard>
     {
         ResetGameState();
         HideMe();
-        // TODO: Implement Next Level
-        // For testing, reload the same scene
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameSession.CurrentLevelIndex++;
+        SceneManager.LoadScene("GameScene");
     }
 
     private void ShowResultBoard()
