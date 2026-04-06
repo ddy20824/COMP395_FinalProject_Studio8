@@ -48,6 +48,7 @@ MonoBehaviour:
   arcHeight: 2
   onTrashBinBounceChannel: {fileID: 11400000, guid: 278dabd54391eac4490e936c2223d579, type: 2}
   onDishDeliveredChannel: {fileID: 11400000, guid: 14d0b33421226994d8170025e3c946cf, type: 2}
+  onDishWastedChannel: {fileID: 11400000, guid: 8f4134ec8ba31e04d891df424ec57fd3, type: 2}
 --- !u!65 &55128378948167470
 BoxCollider:
   m_ObjectHideFlags: 0

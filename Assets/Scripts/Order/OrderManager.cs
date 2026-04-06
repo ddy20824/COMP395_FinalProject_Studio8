@@ -19,6 +19,7 @@ public class OrderManager : MonoBehaviour
     [Header("Current Status")]
     private GameObject[] activeOrders;
     private DishType[] activeDishTypes;
+    private bool[] reservedOrders;
 
     private List<DishType> availableDishes = new List<DishType>();
     private Level currentLevelIndex;
@@ -46,6 +47,7 @@ public class OrderManager : MonoBehaviour
         // Initialize the activeOrders array based on the maxOrderCount
         activeOrders = new GameObject[maxOrderCount];
         activeDishTypes = new DishType[maxOrderCount];
+        reservedOrders = new bool[maxOrderCount];
         currentOrderCount = 0;
 
         // Spawn initial orders at the start of the level
@@ -132,10 +134,49 @@ public class OrderManager : MonoBehaviour
             Destroy(activeOrders[index]);
             activeOrders[index] = null; // Clear the record, the slot becomes empty again
             activeDishTypes[index] = default; // Clear the dish type
+            reservedOrders[index] = false;
             currentOrderCount--;
             onSFXRequest.Raise(GameplaySFXType.ORDER_SUBMIT); // Play order completion sound effect
             Debug.Log($"Position {index} order has been completed and removed. Current order count: {currentOrderCount}");
         }
+    }
+
+    public bool TryReserveOrderByDishType(DishType type, out int orderIndex, out Transform orderTransform)
+    {
+        orderIndex = -1;
+        orderTransform = null;
+
+        for (int i = 0; i < activeOrders.Length; i++)
+        {
+            if (activeOrders[i] != null && !reservedOrders[i] && activeDishTypes[i] == type)
+            {
+                reservedOrders[i] = true;
+                orderIndex = i;
+                orderTransform = activeOrders[i].transform;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void ReleaseOrderReservation(int index)
+    {
+        if (index >= 0 && index < reservedOrders.Length)
+        {
+            reservedOrders[index] = false;
+        }
+    }
+
+    public bool TryCompleteReservedOrder(int index)
+    {
+        if (index >= 0 && index < activeOrders.Length && activeOrders[index] != null && reservedOrders[index])
+        {
+            CompleteOrder(index);
+            return true;
+        }
+
+        return false;
     }
 
     // Check if the current ingredients in the pan match any active order
@@ -172,6 +213,30 @@ public class OrderManager : MonoBehaviour
         }
 
         // No match found
+        return false;
+    }
+
+    public bool TryFindLevelDishByIngredients(List<IngredientMapping> currentIngredients, out DishTypeMapping matchedDish)
+    {
+        matchedDish = null;
+
+        List<IngredientType> panIngredients = new List<IngredientType>();
+        foreach (var map in currentIngredients)
+        {
+            panIngredients.Add(map.type);
+        }
+
+        for (int i = 0; i < availableDishes.Count; i++)
+        {
+            DishType dishType = availableDishes[i];
+            DishTypeMapping dishMapping = gameConfig.dishTypeMappings.Find(d => d.type == dishType);
+            if (dishMapping != null && AreIngredientsEqual(panIngredients, dishMapping.requiredIngredients))
+            {
+                matchedDish = dishMapping;
+                return true;
+            }
+        }
+
         return false;
     }
 

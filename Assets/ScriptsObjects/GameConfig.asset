@@ -20,6 +20,7 @@ MonoBehaviour:
     wastedIngredient: 30
     leftRottenIngredient: 30
     failureDish: 50
+    noOrderDish: 30
   allLevels:
   - levelName: 0
     timeLimit: 90

@@ -17,7 +17,7 @@ public class GameConfig : ScriptableObject
 public class LevelDataContent
 {
     public Level levelName;
-    public float timeLimit;
+    public int timeLimit;
     public List<IngredientType> availableIngredients;
 
     public List<DishType> availableDishes;
@@ -58,4 +58,5 @@ public class PenaltyScore
     public int wastedIngredient = 30;
     public int leftRottenIngredient = 30;
     public int failureDish = 50;
+    public int noOrderDish = 30;
 }

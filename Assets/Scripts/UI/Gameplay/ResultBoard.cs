@@ -15,16 +15,22 @@ public class ResultBoard : BasePanel<ResultBoard>
     [SerializeField] private Button btnBackToMain;
     [SerializeField] private TextMeshProUGUI successfulDish;
     [SerializeField] private TextMeshProUGUI failedDish;
+    [SerializeField] private TextMeshProUGUI noOrderedDish;
     [SerializeField] private TextMeshProUGUI rottenIngr;
+    [SerializeField] private TextMeshProUGUI wastedIngr;
+    [SerializeField] private TextMeshProUGUI uncleanedIngr;
     [SerializeField] private TextMeshProUGUI totalScore;
     [SerializeField] private TextMeshProUGUI freeAdvice;
     [SerializeField] private GameObject blurVolume;
     [SerializeField] private Sprite[] starStates;
     [SerializeField] private Image[] stars;
     [SerializeField] private int testScore = 10;
+    [SerializeField] private ScoreManager scoreManager;
+    [SerializeField] private GameConfig gameConfig;
 
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
+    [SerializeField] private VoidEventChannel endGameEventChannel;
     protected override void Awake()
     {
         base.Awake();
@@ -35,29 +41,43 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void Start()
     {
-        TestUI(); // Only for testing
-
         btnBackToMain.onClick.AddListener(() =>
         {
             BackToMainMenu();
         });
 
-        btnNextLevel.onClick.AddListener(() => {
+        btnNextLevel.onClick.AddListener(() =>
+        {
             GoNextLevel();
         });
     }
 
+    private void OnEnable()
+    {
+        if (endGameEventChannel != null)
+        {
+            endGameEventChannel.Subscribe(ShowResultBoard);
+        }
+        if (GameSession.CurrentLevelIndex == Level.Level3)
+        {
+            btnNextLevel.gameObject.SetActive(false);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (endGameEventChannel != null)
+        {
+            endGameEventChannel.Unsubscribe(ShowResultBoard);
+        }
+    }
+
     private void Update()
     {
+        // For testing purposes, press F to show the result board
         if (Keyboard.current.fKey.wasPressedThisFrame)
         {
-            SoundManager.Instance.ToggleGameMusic(false);
-            onSFXRequest.Raise(GameplaySFXType.LEVEL_COMPLETE);
-            DisableAllGameInteractions();
-            PauseMenu.Instance.IsPause = true;
-            blurVolume.SetActive(true);
-            SetLevelSummary(testScore);
-            ShowMe();
+            ShowResultBoard();
         }
     }
 
@@ -69,33 +89,26 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void GoNextLevel()
     {
-        // TODO: Implement Next Level
         ResetGameState();
         HideMe();
+        GameSession.CurrentLevelIndex++;
+        SceneManager.LoadScene("GameScene");
     }
 
-    //private List<MonoBehaviour> FindAllInteractionScripts()
-    //{
-    //    List<MonoBehaviour> scripts = new List<MonoBehaviour>();
+    private void ShowResultBoard()
+    {
+        SoundManager.Instance.ToggleGameMusic(false);
+        onSFXRequest.Raise(GameplaySFXType.LEVEL_COMPLETE);
 
-    //    DragController[] allDraggables = Object.FindObjectsByType<DragController>(FindObjectsSortMode.None);
-    //    IngredientController[] allIngredients = Object.FindObjectsByType<IngredientController>(FindObjectsSortMode.None);
-    //    BaseStorage[] storages = Object.FindObjectsByType<BaseStorage>(FindObjectsSortMode.None);
-    //    BoxInteraction[] boxInteractions = Object.FindObjectsByType<BoxInteraction>(FindObjectsSortMode.None);
-    //    OrderManager[] orderManagers = Object.FindObjectsByType<OrderManager>(FindObjectsSortMode.None);
-    //    CookController[] cookControllers = Object.FindObjectsByType<CookController>(FindObjectsSortMode.None);
-    //    CookedDish[] cookedDishes = Object.FindObjectsByType<CookedDish>(FindObjectsSortMode.None);
+        scoreManager.ApplyRottenPenaltyAtLevelEnd();
 
-    //    scripts.AddRange(allDraggables);
-    //    scripts.AddRange(allIngredients);
-    //    scripts.AddRange(storages);
-    //    scripts.AddRange(boxInteractions);
-    //    scripts.AddRange(orderManagers);
-    //    scripts.AddRange(cookControllers);
-    //    scripts.AddRange(cookedDishes);
+        DisableAllGameInteractions();
+        PauseMenu.Instance.IsPause = true;
+        blurVolume.SetActive(true);
 
-    //    return scripts;
-    //}
+        SetLevelSummary(scoreManager.getFinalScoreData().totalScore);
+        ShowMe();
+    }
 
     private void DisableAllGameInteractions()
     {
@@ -124,6 +137,7 @@ public class ResultBoard : BasePanel<ResultBoard>
     {
         SetStars(score);
         SetAdvice(score);
+        setScoreDetail();
     }
 
     private void SetStars(int score)
@@ -134,7 +148,7 @@ public class ResultBoard : BasePanel<ResultBoard>
         }
         if (score >= 200)
         {
-            stars[1].sprite = starStates[1];           
+            stars[1].sprite = starStates[1];
         }
         if (score >= 100)
         {
@@ -144,21 +158,34 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void SetAdvice(int score)
     {
-        if (score >= 500)
+        // if (score >= 500)
+        // {
+        //     freeAdvice.text = "You did a great job!";
+        // }
+        // else if (score >= 200)
+        // {
+        //     freeAdvice.text = "Good job! Pay attention to the expiring resources in the box to prevent rotten ingredients.";
+        // }
+        // else if (score >= 100)
+        // {
+        //     freeAdvice.text = "Well done! Don't waste too much food mkay!";
+        // }
+        // else
+        // {
+        //     freeAdvice.text = "Don't worry! An environmentalist will contact you shortly.";
+        // }
+
+        //TODO: add carbonImpact in GameConfig
+        FinalScoreData scoreData = scoreManager.getFinalScoreData();
+
+        if (scoreData.totalCarbonDistance > 0f)
         {
-            freeAdvice.text = "You did a great job!";
-        }
-        else if (score >= 200)
-        {
-            freeAdvice.text = "Good job! Pay attention to the expiring resources in the box to prevent rotten ingredients.";
-        }
-        else if (score >= 100)
-        {
-            freeAdvice.text = "Well done! Don't waste too much food mkay!";
+            freeAdvice.text = $"Your food waste created enough CO2 to drive a car for <color=red>{scoreData.totalCarbonDistance:F1} km</color>. " +
+                              "Think about the planet, Chef!";
         }
         else
         {
-            freeAdvice.text = "Don't worry! An environmentalist will contact you shortly.";
+            freeAdvice.text = "Zero Waste! You saved the planet today. Even the polar bears are cheering for you!";
         }
     }
 
@@ -172,11 +199,37 @@ public class ResultBoard : BasePanel<ResultBoard>
         PauseMenu.Instance.IsPause = false;
     }
 
-    private void TestUI() // Only for testing
+    private void setScoreDetail()
     {
-        successfulDish.text = $"3 x 100 = 300";
-        failedDish.text = $"1 x 50 = -50";
-        rottenIngr.text = $"10 x 10 = -100";
-        totalScore.text = "150";
+        FinalScoreData scoreData = scoreManager.getFinalScoreData();
+
+        // Dish completion details
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+        if (scoreData.dishCompletionData != null && scoreData.dishCompletionData.Count > 0)
+        {
+            foreach (var data in scoreData.dishCompletionData)
+            {
+                int unitScore = data.deliveredCount > 0 ? data.scoreGained / data.deliveredCount : 0;
+                sb.AppendLine($"{data.deliveredCount} x {unitScore} = {data.scoreGained}");
+                // sb.AppendLine($"{data.dishType}: {data.deliveredCount} x {unitScore} = {data.scoreGained}");
+            }
+        }
+        else
+        {
+            sb.Append("No dishes delivered: 0");
+        }
+
+        successfulDish.text = sb.ToString();
+
+        // Dealing with failed dishes and rotten ingredients
+        failedDish.text = $"Failed: {scoreData.failedDishCount} x {gameConfig.penaltyScore.failureDish} = -{scoreData.failedDishPenalty}";
+        noOrderedDish.text = $"No Order: {scoreData.noOrderDishCount} x {gameConfig.penaltyScore.noOrderDish} = -{scoreData.noOrderDishPenalty}";
+
+        rottenIngr.text = $"{scoreData.rottenIngredientCount} x {gameConfig.penaltyScore.rottenIngredient} = -{scoreData.rottenIngredientPenalty}";
+        wastedIngr.text = $"{scoreData.wastedIngredientCount} x {gameConfig.penaltyScore.wastedIngredient} = -{scoreData.wastedIngredientPenalty}";
+        uncleanedIngr.text = $"{scoreData.levelEndRottenCount} x {gameConfig.penaltyScore.leftRottenIngredient} = -{scoreData.levelEndRottenPenalty}";
+
+        totalScore.text = $"{scoreData.totalScore}";
     }
 }
