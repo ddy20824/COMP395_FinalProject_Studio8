@@ -3888,13 +3888,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8523944550278176125, guid: e9ce7df67a055e34ba50254988bf5104, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1010364644}
   m_SourcePrefab: {fileID: 100100000, guid: e9ce7df67a055e34ba50254988bf5104, type: 3}
 --- !u!4 &1010364640 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9007466180629579719, guid: e9ce7df67a055e34ba50254988bf5104, type: 3}
   m_PrefabInstance: {fileID: 1010364639}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1010364644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576682067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d53ab0bfa050884cb055567efde4e5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverCursor
 --- !u!1 &1018618198
 GameObject:
   m_ObjectHideFlags: 0
@@ -6435,8 +6450,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5010624184890176765, guid: 0df451622d7200c468fb0007569e8c98, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1618577369}
   m_SourcePrefab: {fileID: 100100000, guid: 0df451622d7200c468fb0007569e8c98, type: 3}
+--- !u!1 &1618577368 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5010624184890176765, guid: 0df451622d7200c468fb0007569e8c98, type: 3}
+  m_PrefabInstance: {fileID: 1618577367}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1618577369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618577368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d53ab0bfa050884cb055567efde4e5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverCursor
 --- !u!1 &1626743280
 GameObject:
   m_ObjectHideFlags: 0
@@ -8695,13 +8730,45 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7135596636383415296, guid: 024d7cadf49fda6468b34d20cc047799, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 916426092461067711}
   m_SourcePrefab: {fileID: 100100000, guid: 024d7cadf49fda6468b34d20cc047799, type: 3}
+--- !u!1 &916426092461067710 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7135596636383415296, guid: 024d7cadf49fda6468b34d20cc047799, type: 3}
+  m_PrefabInstance: {fileID: 916426092461067709}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &916426092461067711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 916426092461067710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d53ab0bfa050884cb055567efde4e5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverCursor
 --- !u!4 &3509069798161467191 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9007466180629579719, guid: e9ce7df67a055e34ba50254988bf5104, type: 3}
   m_PrefabInstance: {fileID: 7512659479880853421}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3509069798161467194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841285820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d53ab0bfa050884cb055567efde4e5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverCursor
 --- !u!1001 &7512659479880853421
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8769,7 +8836,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8523944550278176125, guid: e9ce7df67a055e34ba50254988bf5104, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3509069798161467194}
   m_SourcePrefab: {fileID: 100100000, guid: e9ce7df67a055e34ba50254988bf5104, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

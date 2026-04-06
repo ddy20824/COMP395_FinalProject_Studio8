@@ -21,6 +21,8 @@ public class DragController : MonoBehaviour
 
     public bool IsDragging => isDragging;
 
+    public static bool IsDraggingEnabled { get; private set; } // public flag for cursor interaction
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -79,6 +81,7 @@ public class DragController : MonoBehaviour
         ClearAimedStorage();
         ClearAimedStove();
 
+        IsDraggingEnabled = true;
         isDragging = true;
         dragStartPosition = transform.position;
         dragStartRotation = transform.rotation;
@@ -103,6 +106,7 @@ public class DragController : MonoBehaviour
 
         if (!dragInteractionEnabled)
         {
+            IsDraggingEnabled = false;
             isDragging = false;
             ClearAimedStorage();
             ClearAimedStove();
@@ -126,6 +130,7 @@ public class DragController : MonoBehaviour
             currentAimedStorage.StoreItem(this.gameObject);
         }
 
+        IsDraggingEnabled = false;
         isDragging = false;
         ClearAimedStorage();
         ClearAimedStove();
