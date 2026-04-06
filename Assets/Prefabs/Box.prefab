@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 2655335143608419466}
   - component: {fileID: 7260542653023006488}
   - component: {fileID: 5159875801295983518}
+  - component: {fileID: 1676670523215521567}
   m_Layer: 6
   m_Name: Box
   m_TagString: Untagged
@@ -248,6 +249,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   onSFXRequest: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
+--- !u!114 &1676670523215521567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2875536377531072025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d53ab0bfa050884cb055567efde4e5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameObjectPointerCursor
 --- !u!1 &5076848512465422755
 GameObject:
   m_ObjectHideFlags: 0

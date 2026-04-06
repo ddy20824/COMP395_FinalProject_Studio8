@@ -99,7 +99,7 @@ public class BoxInteraction : MonoBehaviour
 
         if (!HasObjectInsideBoxVolume())
         {
-            CursorManager.Instance.SetNormalCursor();
+            //CursorManager.Instance.SetNormalCursor();
             Destroy(gameObject);
             onSFXRequest.Raise(GameplaySFXType.TRASH_INTO);
         }
@@ -298,7 +298,7 @@ public class BoxInteraction : MonoBehaviour
                 if (!isHovering)
                 {
                     isHovering = true;
-                    CursorManager.Instance.SetPointerCursor();
+                    //CursorManager.Instance.SetPointerCursor();
                 }
                 return;
             }
@@ -307,7 +307,7 @@ public class BoxInteraction : MonoBehaviour
         if (isHovering)
         {
             isHovering = false;
-            CursorManager.Instance.SetNormalCursor();
+            //CursorManager.Instance.SetNormalCursor();
         }
     }
 }

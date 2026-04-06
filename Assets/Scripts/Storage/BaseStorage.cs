@@ -27,6 +27,7 @@ public abstract class BaseStorage : MonoBehaviour
             outline.enabled = false;
         }
     }
+
     private void Update()
     {
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)

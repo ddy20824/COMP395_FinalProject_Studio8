@@ -5,12 +5,19 @@ public class CursorPointerInteraction : MonoBehaviour, IPointerEnterHandler, IPo
 {
     public void OnPointerEnter(PointerEventData eventData)
     {
-        CursorManager.Instance.SetPointerCursor();
+        Debug.Log("ENTER");
+        if (!DragController.IsDraggingEnabled)
+        {
+            CursorManager.Instance.SetPointerCursor();
+        }            
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        CursorManager.Instance.SetNormalCursor();
+        if (!DragController.IsDraggingEnabled)
+        {
+            CursorManager.Instance.SetNormalCursor();
+        }
     }
 
     private void OnDisable()
