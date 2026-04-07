@@ -13,7 +13,13 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     [SerializeField] private Button btnNextLevel;
     [SerializeField] private Button btnBackToMain;
-    [SerializeField] private TextMeshProUGUI successfulDish;
+    // [SerializeField] private TextMeshProUGUI successfulDish;
+    [SerializeField] private GameObject successfulDish_Ham;
+    [SerializeField] private GameObject successfulDish_TomatoPizza;
+    [SerializeField] private GameObject successfulDish_HamPizza;
+    [SerializeField] private GameObject successfulDish_PumpkinPie;
+    [SerializeField] private GameObject successfulDish_NoDish;
+
     [SerializeField] private TextMeshProUGUI failedDish;
     [SerializeField] private TextMeshProUGUI noOrderedDish;
     [SerializeField] private TextMeshProUGUI rottenIngr;
@@ -62,6 +68,11 @@ public class ResultBoard : BasePanel<ResultBoard>
         {
             btnNextLevel.gameObject.SetActive(false);
         }
+        successfulDish_NoDish.SetActive(false);
+        successfulDish_Ham.SetActive(false);
+        successfulDish_TomatoPizza.SetActive(false);
+        successfulDish_HamPizza.SetActive(false);
+        successfulDish_PumpkinPie.SetActive(false);
     }
 
     private void OnDisable()
@@ -211,24 +222,45 @@ public class ResultBoard : BasePanel<ResultBoard>
             foreach (var data in scoreData.dishCompletionData)
             {
                 int unitScore = data.deliveredCount > 0 ? data.scoreGained / data.deliveredCount : 0;
-                sb.AppendLine($"{data.deliveredCount} x {unitScore} = {data.scoreGained}");
+                string dishesText = $" x {data.deliveredCount} = {data.scoreGained}";
+                switch (data.dishType)
+                {
+                    case DishType.FriedHam:
+                        successfulDish_Ham.SetActive(true);
+                        successfulDish_Ham.GetComponentInChildren<TextMeshProUGUI>().text = dishesText;
+                        break;
+                    case DishType.TomatoPizza:
+                        successfulDish_TomatoPizza.SetActive(true);
+                        successfulDish_TomatoPizza.GetComponentInChildren<TextMeshProUGUI>().text = dishesText;
+                        break;
+                    case DishType.HamPizza:
+                        successfulDish_HamPizza.SetActive(true);
+                        successfulDish_HamPizza.GetComponentInChildren<TextMeshProUGUI>().text = dishesText;
+                        break;
+                    case DishType.PumpkinPie:
+                        successfulDish_PumpkinPie.SetActive(true);
+                        successfulDish_PumpkinPie.GetComponentInChildren<TextMeshProUGUI>().text = dishesText;
+                        break;
+                }
+                // int unitScore = data.deliveredCount > 0 ? data.scoreGained / data.deliveredCount : 0;
+                // sb.AppendLine($"{data.deliveredCount} x {unitScore} = {data.scoreGained}");
                 // sb.AppendLine($"{data.dishType}: {data.deliveredCount} x {unitScore} = {data.scoreGained}");
             }
         }
         else
         {
-            sb.Append("No dishes delivered: 0");
+            successfulDish_NoDish.SetActive(true);
         }
 
-        successfulDish.text = sb.ToString();
+        // successfulDish.text = sb.ToString();
 
         // Dealing with failed dishes and rotten ingredients
-        failedDish.text = $"Failed: {scoreData.failedDishCount} x {gameConfig.penaltyScore.failureDish} = -{scoreData.failedDishPenalty}";
-        noOrderedDish.text = $"No Order: {scoreData.noOrderDishCount} x {gameConfig.penaltyScore.noOrderDish} = -{scoreData.noOrderDishPenalty}";
+        failedDish.text = $"{scoreData.failedDishCount} x {gameConfig.penaltyScore.failureDish} = {scoreData.failedDishPenalty}";
+        noOrderedDish.text = $"{scoreData.noOrderDishCount} x {gameConfig.penaltyScore.noOrderDish} = {scoreData.noOrderDishPenalty}";
 
-        rottenIngr.text = $"{scoreData.rottenIngredientCount} x {gameConfig.penaltyScore.rottenIngredient} = -{scoreData.rottenIngredientPenalty}";
-        wastedIngr.text = $"{scoreData.wastedIngredientCount} x {gameConfig.penaltyScore.wastedIngredient} = -{scoreData.wastedIngredientPenalty}";
-        uncleanedIngr.text = $"{scoreData.levelEndRottenCount} x {gameConfig.penaltyScore.leftRottenIngredient} = -{scoreData.levelEndRottenPenalty}";
+        rottenIngr.text = $"{scoreData.rottenIngredientCount} x {gameConfig.penaltyScore.rottenIngredient} = {scoreData.rottenIngredientPenalty}";
+        wastedIngr.text = $"{scoreData.wastedIngredientCount} x {gameConfig.penaltyScore.wastedIngredient} = {scoreData.wastedIngredientPenalty}";
+        uncleanedIngr.text = $"{scoreData.levelEndRottenCount} x {gameConfig.penaltyScore.leftRottenIngredient} = {scoreData.levelEndRottenPenalty}";
 
         totalScore.text = $"{scoreData.totalScore}";
     }
