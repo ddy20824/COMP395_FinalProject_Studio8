@@ -37,6 +37,7 @@ public class IngredientMapping
     public GameObject prefab;
     public Sprite sprite;
     public float iconScale = 0.1f;
+    public float carbonFootprint;
 }
 
 [System.Serializable]
@@ -49,6 +50,7 @@ public class DishTypeMapping
     public int scoreValue;
     public List<IngredientType> requiredIngredients;
     public int cookingTime; // in seconds
+    public float carbonFootprint;
 }
 
 [System.Serializable]

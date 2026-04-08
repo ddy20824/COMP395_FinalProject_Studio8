@@ -153,15 +153,21 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void SetStars(int score)
     {
-        if (score >= 500)
+        Level level = GameSession.CurrentLevelIndex;
+        int star1 = 100, star2 = 200, star3 = 500;
+
+        if (level == Level.Level2) { star1 = 500; star2 = 900; star3 = 1200; }
+        else if (level == Level.Level3) { star1 = 800; star2 = 1500; star3 = 2200; }
+
+        if (score >= star1)
         {
             stars[2].sprite = starStates[1];
         }
-        if (score >= 200)
+        if (score >= star2)
         {
             stars[1].sprite = starStates[1];
         }
-        if (score >= 100)
+        if (score >= star3)
         {
             stars[0].sprite = starStates[1];
         }
@@ -169,24 +175,6 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void SetAdvice(int score)
     {
-        // if (score >= 500)
-        // {
-        //     freeAdvice.text = "You did a great job!";
-        // }
-        // else if (score >= 200)
-        // {
-        //     freeAdvice.text = "Good job! Pay attention to the expiring resources in the box to prevent rotten ingredients.";
-        // }
-        // else if (score >= 100)
-        // {
-        //     freeAdvice.text = "Well done! Don't waste too much food mkay!";
-        // }
-        // else
-        // {
-        //     freeAdvice.text = "Don't worry! An environmentalist will contact you shortly.";
-        // }
-
-        //TODO: add carbonImpact in GameConfig
         FinalScoreData scoreData = scoreManager.getFinalScoreData();
 
         if (scoreData.totalCarbonDistance > 0f)
@@ -222,7 +210,7 @@ public class ResultBoard : BasePanel<ResultBoard>
             foreach (var data in scoreData.dishCompletionData)
             {
                 int unitScore = data.deliveredCount > 0 ? data.scoreGained / data.deliveredCount : 0;
-                string dishesText = $" x {data.deliveredCount} = {data.scoreGained}";
+                string dishesText = $"x{data.deliveredCount} = {data.scoreGained}";
                 switch (data.dishType)
                 {
                     case DishType.FriedHam:
