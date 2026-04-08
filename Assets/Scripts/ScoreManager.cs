@@ -123,8 +123,15 @@ public class ScoreManager : MonoBehaviour
         rottenIngredientCount++;
         rottenIngredientPenalty += penalty;
 
-        Debug.Log($"Ingredient Rotten: {ingredientType} - Score Penalty Applied: {penalty}");
-        HandleScoreUpdate(-penalty);
+        float dishCarbonDist = 0f;
+        IngredientMapping mapping = gameConfig.ingredientMappings.Find(m => m.type == ingredientType);
+
+        if (mapping != null)
+            dishCarbonDist = mapping.carbonFootprint;
+        totalCarbonDistance += dishCarbonDist;
+
+        Debug.Log($"Ingredient Rotten: {ingredientType} - Score Penalty Applied: {penalty} - Carbon Distance Added: {dishCarbonDist}");
+        HandleScoreUpdate(penalty);
     }
 
     private void HandleDishDelivered(DishType dishType)
@@ -135,8 +142,8 @@ public class ScoreManager : MonoBehaviour
             failedDishCount++;
             failedDishPenalty += penalty;
 
-            Debug.Log($"Failed Dish Delivered - Score Penalty Applied: {-penalty}");
-            HandleScoreUpdate(-penalty);
+            Debug.Log($"Failed Dish Delivered - Score Penalty Applied: {penalty}");
+            HandleScoreUpdate(penalty);
         }
         else
         {
@@ -153,7 +160,6 @@ public class ScoreManager : MonoBehaviour
         }
     }
 
-    // 處理成品料理（含失敗料理）進垃圾桶
     public void HandleDishWaste(DishType type)
     {
         DishTypeMapping mapping = gameConfig.dishTypeMappings.Find(m => m.type == type);
@@ -167,7 +173,7 @@ public class ScoreManager : MonoBehaviour
             failedDishPenalty += penalty;
 
             dishCarbonDist = 30f;
-            Debug.Log($"Failed Dish Wasted - Score Penalty Applied: {penalty}");
+            Debug.Log($"Failed Dish Wasted - Score Penalty Applied: {penalty} - Carbon Distance Added: {dishCarbonDist}");
         }
         else
         {
@@ -175,14 +181,13 @@ public class ScoreManager : MonoBehaviour
             noOrderDishCount++;
             noOrderDishPenalty += penalty;
 
-            int ingredientCount = mapping != null ? mapping.requiredIngredients.Count : 0;
-            dishCarbonDist = (ingredientCount * 20f) + 10f;
+            dishCarbonDist = mapping != null ? mapping.carbonFootprint : 0;
 
-            Debug.Log($"Dish Wasted With No Order: {type} - Score Penalty Applied: {penalty}");
+            Debug.Log($"Dish Wasted With No Order: {type} - Score Penalty Applied: {penalty} - Carbon Distance Added: {dishCarbonDist}");
         }
 
         totalCarbonDistance += dishCarbonDist;
-        HandleScoreUpdate(-penalty);
+        HandleScoreUpdate(penalty);
     }
 
     private void HandleFreshIngredientTrashed(IngredientType ingredientType)
@@ -191,8 +196,15 @@ public class ScoreManager : MonoBehaviour
         wastedIngredientCount++;
         wastedIngredientPenalty += penalty;
 
-        Debug.Log($"Trashed: {ingredientType} - Score Penalty Applied: {penalty}");
-        HandleScoreUpdate(-penalty);
+        float dishCarbonDist = 0f;
+        IngredientMapping mapping = gameConfig.ingredientMappings.Find(m => m.type == ingredientType);
+
+        if (mapping != null)
+            dishCarbonDist = mapping.carbonFootprint;
+        totalCarbonDistance += dishCarbonDist;
+
+        Debug.Log($"Trashed: {ingredientType} - Score Penalty Applied: {penalty} - Carbon Distance Added: {dishCarbonDist}");
+        HandleScoreUpdate(penalty);
     }
 
     private void HandleScoreUpdate(int scoreChange)
@@ -243,7 +255,6 @@ public class ScoreManager : MonoBehaviour
         return result;
     }
 
-    //TODO: Penalty for leaving rotten ingredients at the end of the level
     public void ApplyRottenPenaltyAtLevelEnd()
     {
         Debug.Log("Applying Rotten Ingredient Penalty at Level End...");
@@ -265,7 +276,7 @@ public class ScoreManager : MonoBehaviour
         levelEndRottenPenalty += totalPenalty;
 
         Debug.Log($"Level End Rotten Check: {rottenCount} rotten ingredients - Total Penalty: {totalPenalty}");
-        HandleScoreUpdate(-totalPenalty);
+        HandleScoreUpdate(totalPenalty);
     }
 
     public FinalScoreData getFinalScoreData()
