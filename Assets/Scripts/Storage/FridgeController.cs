@@ -143,7 +143,7 @@ public class FridgeController : BaseStorage
         if (isOpen)
         {
             onSFXRequest.Raise(GameplaySFXType.FRIDGE_OPEN);
-            StartCoroutine(DelayedShowExplodedView(0.5f));
+            StartCoroutine(DelayedShowExplodedView(0.3f));
         }
         else
         {
@@ -230,7 +230,7 @@ public class FridgeController : BaseStorage
     private IEnumerator AnimateToPosition(Transform target, Vector3 targetPos, bool isOpening)
     {
         float elapsed = 0f;
-        float duration = 0.5f;
+        float duration = 0.2f;
         Vector3 startPos = target.position;
         Quaternion startRot = target.rotation;
 

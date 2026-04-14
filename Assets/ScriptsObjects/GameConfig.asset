@@ -49,7 +49,7 @@ MonoBehaviour:
     orderSpawnRate: 6
     maxOrderNumber: 6
     initailOrderNumber: 4
-    hasPowerOutageEvent: 0
+    hasPowerOutageEvent: 1
     capacityOfFridge: 8
     panNumber: 2
   ingredientMappings:
