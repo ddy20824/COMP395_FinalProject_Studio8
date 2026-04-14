@@ -122,7 +122,7 @@ public class CameraController : MonoBehaviour
 
     private IEnumerator SmoothMove(Vector3 targetPos, Quaternion targetRot)
     {
-        float duration = 1.0f; // how long the transition takes
+        float duration = 0.5f; // how long the transition takes
         float elapsed = 0;
         Vector3 startPos = transform.position;
         Quaternion startRot = transform.rotation;
