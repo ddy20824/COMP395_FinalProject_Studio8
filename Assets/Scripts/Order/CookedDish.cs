@@ -50,7 +50,8 @@ public class CookedDish : MonoBehaviour
 
     private void HandleClick()
     {
-        if (!isSuccess)
+        // Only failed dishes are forced to trash; normal dishes should check orders at click time.
+        if (dishType == DishType.FailedDish)
         {
             GoToTrash();
             return;

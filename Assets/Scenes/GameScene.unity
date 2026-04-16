@@ -5135,14 +5135,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   minVerticalAngle: 35
-  maxVerticalAngle: 50
+  maxVerticalAngle: 45
   minHorizontalAngle: -100
-  maxHorizontalAngle: -80
+  maxHorizontalAngle: -85
   lookSensitivity: 0.2
   panSpeed: 0.02
   zoomSpeed: 50
   minBounds: {x: 1.5, y: 3, z: -1.5}
-  maxBounds: {x: 4, y: 5, z: 3.5}
+  maxBounds: {x: 4, y: 5, z: 2}
   cameraFocusChannel: {fileID: 11400000, guid: 9605dd7fe81ed904a9fda413a7c8ad4c, type: 2}
 --- !u!1001 &1025286706
 PrefabInstance:
