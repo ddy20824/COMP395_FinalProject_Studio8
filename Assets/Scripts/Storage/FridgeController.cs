@@ -192,7 +192,6 @@ public class FridgeController : BaseStorage
         }
 
         item.SetActive(false);
-        Debug.Log($"Fridge save: {item.name}");
     }
 
     public override void ToggleHighlight(bool show)

@@ -9,6 +9,7 @@ public class LevelBoxGenerator : MonoBehaviour
     public GameObject boxPrefab;
     public GameObject glowEffectPrefab;
     public List<Transform> spawnPoints = new List<Transform>();
+    [SerializeField] private IntTypeEventChannel respawnItemEvent;
 
     [Header("Detection Settings")]
     public float checkRadius = 0.5f; // Detection radius
@@ -16,58 +17,55 @@ public class LevelBoxGenerator : MonoBehaviour
 
     [Header("Timer Settings")]
     public float spawnInterval = 2.0f;
-    private float timer;
+
+    private LevelDataContent levelData;
 
     private void Start()
     {
-        timer = spawnInterval;
+        levelData = gameConfig.allLevels.Find(ld => ld.levelName == GameSession.CurrentLevelIndex);
 
         foreach (var spawnPoint in spawnPoints)
         {
             spawnPoint.gameObject.SetActive(false);
         }
-    }
 
-    private void Update()
-    {
         GenerateBoxes();
     }
 
+    private void OnEnable() => respawnItemEvent.Subscribe(respawnItem);
+    private void OnDisable() => respawnItemEvent.Unsubscribe(respawnItem);
+
     public void GenerateBoxes()
     {
-        if (gameConfig == null || boxPrefab == null)
+        for (int i = 0; i < levelData.availableIngredients.Count; i++)
         {
-            return;
-        }
+            IngredientType type = levelData.availableIngredients[i];
+            IngredientMapping mapping = gameConfig.ingredientMappings.Find(m => m.type == type);
 
-        LevelDataContent levelData = gameConfig.allLevels.Find(ld => ld.levelName == GameSession.CurrentLevelIndex);
-        if (levelData.availableIngredients == null || levelData.availableIngredients.Count == 0)
-        {
-            return;
-        }
-
-        timer += Time.deltaTime;
-        if (timer >= spawnInterval)
-        {
-            for (int i = 0; i < levelData.availableIngredients.Count; i++)
+            if (mapping == null || mapping.prefab == null)
             {
-                IngredientType type = levelData.availableIngredients[i];
-                IngredientMapping mapping = gameConfig.ingredientMappings.Find(m => m.type == type);
-
-                if (mapping == null || mapping.prefab == null)
-                {
-                    continue;
-                }
-
-                bool isOccupied = Physics.CheckSphere(spawnPoints[i].position, checkRadius, itemLayer);
-
-                if (!isOccupied)
-                {
-                    SpawnItem(i, mapping);
-                }
+                continue;
             }
-            timer = 0f;
+
+            bool isOccupied = Physics.CheckSphere(spawnPoints[i].position, checkRadius, itemLayer);
+
+            if (!isOccupied)
+            {
+                SpawnItem(i, mapping);
+            }
         }
+    }
+
+    private void respawnItem(int index)
+    {
+        IngredientType type = levelData.availableIngredients[index];
+        IngredientMapping mapping = gameConfig.ingredientMappings.Find(m => m.type == type);
+
+        if (mapping == null || mapping.prefab == null)
+        {
+            return;
+        }
+        SpawnItem(index, mapping);
     }
 
     private void SpawnItem(int index, IngredientMapping mapping)
@@ -79,7 +77,7 @@ public class LevelBoxGenerator : MonoBehaviour
         BoxInteraction interaction = box.GetComponent<BoxInteraction>();
         if (interaction != null)
         {
-            interaction.ConfigureBoxContents(mapping.prefab, gameConfig.capacityOfBox);
+            interaction.ConfigureBoxContents(mapping.prefab, gameConfig.capacityOfBox, index);
         }
 
         var glowEffect = Instantiate(glowEffectPrefab, spawnPoints[index].position, Quaternion.identity);

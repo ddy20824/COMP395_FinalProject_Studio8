@@ -34,7 +34,7 @@ MonoBehaviour:
     panNumber: 1
   - levelName: 1
     timeLimit: 150
-    availableIngredients: 020000000300000000000000
+    availableIngredients: 020000000000000003000000
     availableDishes: 000000000100000002000000
     orderSpawnRate: 8
     maxOrderNumber: 5

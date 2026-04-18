@@ -249,6 +249,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   onSFXRequest: {fileID: 11400000, guid: 21063141c0691d648828d84606c715b0, type: 2}
+  onRespawnBtnActiveEvent: {fileID: 11400000, guid: 3c59c7ef7d03b6d408bb82e0d9138623, type: 2}
 --- !u!114 &1676670523215521567
 MonoBehaviour:
   m_ObjectHideFlags: 0

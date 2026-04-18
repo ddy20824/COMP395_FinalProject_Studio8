@@ -29,9 +29,12 @@ public class BoxInteraction : MonoBehaviour
     private readonly List<GameObject> lockedIngredients = new List<GameObject>();
 
     private bool isHovering = false;
+    private int index;
 
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
+    [SerializeField] private IntTypeEventChannel onRespawnBtnActiveEvent;
+
     private void Awake()
     {
         selfCollider = GetComponent<Collider>();
@@ -100,6 +103,7 @@ public class BoxInteraction : MonoBehaviour
         if (!HasObjectInsideBoxVolume())
         {
             //CursorManager.Instance.SetNormalCursor();
+            onRespawnBtnActiveEvent.Raise(index);
             Destroy(gameObject);
             onSFXRequest.Raise(GameplaySFXType.TRASH_INTO);
         }
@@ -139,10 +143,11 @@ public class BoxInteraction : MonoBehaviour
         return false;
     }
 
-    public void ConfigureBoxContents(GameObject contentPrefab, int capacity)
+    public void ConfigureBoxContents(GameObject contentPrefab, int capacity, int boxIndex)
     {
         ingredientPrefab = contentPrefab;
         ingredientCount = Mathf.Max(0, capacity);
+        index = boxIndex;
 
         if (boxRigidbody != null)
         {
