@@ -37,6 +37,9 @@ public class ResultBoard : BasePanel<ResultBoard>
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
     [SerializeField] private VoidEventChannel endGameEventChannel;
+
+    private FinalScoreData scoreData;
+
     protected override void Awake()
     {
         base.Awake();
@@ -108,6 +111,7 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void ShowResultBoard()
     {
+        scoreData = scoreManager.getFinalScoreData();
         SoundManager.Instance.ToggleGameMusic(false);
         onSFXRequest.Raise(GameplaySFXType.LEVEL_COMPLETE);
 
@@ -167,7 +171,7 @@ public class ResultBoard : BasePanel<ResultBoard>
         {
             stars[1].sprite = starStates[1];
         }
-        if (score >= star3)
+        if (score >= star3 && scoreData.totalCarbonDistance == 0f)
         {
             stars[0].sprite = starStates[1];
         }
@@ -175,7 +179,6 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void SetAdvice(int score)
     {
-        FinalScoreData scoreData = scoreManager.getFinalScoreData();
 
         if (scoreData.totalCarbonDistance > 0f)
         {
@@ -200,7 +203,6 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void setScoreDetail()
     {
-        FinalScoreData scoreData = scoreManager.getFinalScoreData();
 
         // Dish completion details
         System.Text.StringBuilder sb = new System.Text.StringBuilder();

@@ -38,7 +38,6 @@ public abstract class BaseStorage : MonoBehaviour
 
     public virtual void ToggleHighlight(bool show)
     {
-        Debug.Log($"{name} ToggleHighlight: {show}");
 
         if (outline != null)
         {
@@ -53,7 +52,6 @@ public abstract class BaseStorage : MonoBehaviour
         ToggleHighlight(false);
         if (IsFull)
         {
-            Debug.Log($"{name} is full！");
             OnStoreFailed(item);
             return false;
         }

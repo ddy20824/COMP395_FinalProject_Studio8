@@ -92,7 +92,6 @@ public class IngredientController : MonoBehaviour
         if (currentLife <= 0f)
         {
             isRotted = true;
-            Debug.Log(ingredientName + " has rotted!");
             onIngredientRotten.Raise(type);
             onSFXRequest.Raise(GameplaySFXType.INGR_ROT);
             // TODO: Somewhere need to subscribe to implement rotten logic (e.g. deduct score)

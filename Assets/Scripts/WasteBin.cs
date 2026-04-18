@@ -81,12 +81,12 @@ public class WasteBin : MonoBehaviour
     private void TrashIngrediant(Collider other)
     {
         if (other == null) return;
-        SetOutline(false);
         TrashIngrediantObject(other.gameObject);
     }
 
     private void TrashIngrediantObject(GameObject ingredientObject)
     {
+        SetOutline(false);
         // get the IngredientController component
         IngredientController ingredientController = ingredientObject.GetComponent<IngredientController>();
 
