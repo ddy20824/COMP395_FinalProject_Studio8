@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InGameUIManager : MonoBehaviour
 {
@@ -9,9 +10,16 @@ public class InGameUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private GameObject inGameUI;
 
+    [Header("Missed Order UI")]
+    [SerializeField] private Image[] missedOrderSlots;
+    [SerializeField] private Sprite normalOrderSprite;
+    [SerializeField] private Sprite missedOrderSprite;
+    [SerializeField] private bool consumeFromRight = true;
+
     [Header("Events")]
     [SerializeField] private IntTypeEventChannel onScoreChangedChannel;
     [SerializeField] private VoidEventChannel endGameEventChannel;
+    [SerializeField] private IntTypeEventChannel onOrderTimeoutCountChangedChannel;
 
     private bool isClockSubscribed;
 
@@ -27,6 +35,10 @@ public class InGameUIManager : MonoBehaviour
         {
             endGameEventChannel.Subscribe(HideInGameUI);
         }
+        if (onOrderTimeoutCountChangedChannel != null)
+        {
+            onOrderTimeoutCountChangedChannel.Subscribe(UpdateMissedOrderIcons);
+        }
     }
 
     private void Start()
@@ -35,6 +47,7 @@ public class InGameUIManager : MonoBehaviour
         UpdateClock(Clock.Instance.GetMinutes(), Clock.Instance.GetSeconds());
         UpdateLevel();
         UpdateScore(0);
+        UpdateMissedOrderIcons(0);
         SubscribeClock();
     }
 
@@ -58,6 +71,16 @@ public class InGameUIManager : MonoBehaviour
         {
             onScoreChangedChannel.Unsubscribe(UpdateScore);
         }
+
+        if (endGameEventChannel != null)
+        {
+            endGameEventChannel.Unsubscribe(HideInGameUI);
+        }
+
+        if (onOrderTimeoutCountChangedChannel != null)
+        {
+            onOrderTimeoutCountChangedChannel.Unsubscribe(UpdateMissedOrderIcons);
+        }
     }
 
     private void SubscribeClock()
@@ -75,7 +98,7 @@ public class InGameUIManager : MonoBehaviour
     {
         if (timerText != null)
         {
-            timerText.text = $"{minutes:00} : {seconds:00}";
+            timerText.text = $"Time: {minutes:00} : {seconds:00}";
         }
     }
 
@@ -94,7 +117,7 @@ public class InGameUIManager : MonoBehaviour
     {
         if (scoreText != null)
         {
-            scoreText.text = score.ToString();
+            scoreText.text = $"Score: {score.ToString()}";
         }
     }
 
@@ -103,6 +126,44 @@ public class InGameUIManager : MonoBehaviour
         if (inGameUI != null)
         {
             inGameUI.SetActive(false);
+        }
+    }
+
+    private void UpdateMissedOrderIcons(int timeoutCount)
+    {
+        if (missedOrderSlots == null || missedOrderSlots.Length == 0)
+        {
+            return;
+        }
+
+        int clampedTimeoutCount = Mathf.Clamp(timeoutCount, 0, missedOrderSlots.Length);
+
+        for (int i = 0; i < missedOrderSlots.Length; i++)
+        {
+            Image slot = missedOrderSlots[i];
+            if (slot == null)
+            {
+                continue;
+            }
+
+            bool shouldShowMissed = consumeFromRight
+                ? i >= missedOrderSlots.Length - clampedTimeoutCount
+                : i < clampedTimeoutCount;
+
+            if (shouldShowMissed)
+            {
+                if (missedOrderSprite != null)
+                {
+                    slot.sprite = missedOrderSprite;
+                }
+            }
+            else
+            {
+                if (normalOrderSprite != null)
+                {
+                    slot.sprite = normalOrderSprite;
+                }
+            }
         }
     }
 }

@@ -363,7 +363,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -30}
-  m_SizeDelta: {x: 250, y: 50}
+  m_SizeDelta: {x: 260, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &22735306
 MonoBehaviour:
@@ -385,7 +385,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Start Cooking
+  m_text: Cooking & Orders
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c384128957a895d4d9c3f56fd6bb66f9, type: 2}
   m_sharedMaterial: {fileID: -3546025896814063014, guid: c384128957a895d4d9c3f56fd6bb66f9, type: 2}
@@ -1974,6 +1974,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4a028ad734bcd274e8402e564bfe1348, type: 3}
   - {fileID: 8300000, guid: 6603ac47cec0cb74c88b053f53d62ff2, type: 3}
   - {fileID: 8300000, guid: cc4b7be8c29c7c444b94781a202e5bcb, type: 3}
+  - {fileID: 8300000, guid: 966acbb8ed0678a42b65058430ea1218, type: 3}
   bgmVolume: 0.1
   uiVolume: 1
   gameplayOneShotVolume: 0.7
@@ -6309,7 +6310,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 125}
-  m_SizeDelta: {x: 320, y: 200}
+  m_SizeDelta: {x: 330, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1539412930
 MonoBehaviour:
@@ -6331,8 +6332,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u2022 <b>Drag 1-3 Items</b> to Pan\n\u2022 <b>Click Pan</b> to Start\n\u2022
-    <b>Click Dish</b> to Deliver\n\u2022 <b>TRASH</b> Failed Dishes"
+  m_text: "\u2022 <b>Drag 1-3</b> Items to Pan\n\u2022 <b>Click Pan</b> to Start\n\u2022
+    <b>Click Dish</b> to Deliver\n\u2022 <b>Click Button</b> to Restock\n\u2022 Deliver
+    before Order Expires\n\u2022 5 Missed Orders = <color=#FF0000><b>Closed!</b></color>"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d55ed06f90f7523408a47c9097fe9d06, type: 2}
   m_sharedMaterial: {fileID: -1384473667007281794, guid: d55ed06f90f7523408a47c9097fe9d06, type: 2}
@@ -6359,8 +6361,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
-  m_fontSizeBase: 28
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

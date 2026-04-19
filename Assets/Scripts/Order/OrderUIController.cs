@@ -1,11 +1,26 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class OrderUIController : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer dishRenderer;
     [SerializeField] private Transform ingredientContainer; // A child transform where ingredient icons will be spawned
     [SerializeField] private GameObject spritePrefab; // A simple prefab with a SpriteRenderer, used for ingredient icons
+    [SerializeField] private Image progressBarFill;
+    [SerializeField] private Transform progressBarRoot;
+
+    private static readonly Color HighTimeColor = Color.green;
+    private static readonly Color MidTimeColor = Color.yellow;
+    private static readonly Color LowTimeColor = Color.red;
+
+    private void Awake()
+    {
+        if (progressBarRoot == null && progressBarFill != null && progressBarFill.transform.parent != null)
+        {
+            progressBarRoot = progressBarFill.transform.parent;
+        }
+    }
 
     public void SetupOrder(DishTypeMapping dishData, List<IngredientMapping> ingredientDatas)
     {
@@ -56,6 +71,36 @@ public class OrderUIController : MonoBehaviour
             // 4. Set the scale
             float s = ingredientDatas[i].iconScale;
             iconObj.transform.localScale = Vector3.one * s;
+        }
+
+        UpdateTimerVisual(1f);
+    }
+
+    public void UpdateTimerVisual(float normalizedRemaining)
+    {
+        float clampedRemaining = Mathf.Clamp01(normalizedRemaining);
+
+        if (progressBarFill != null)
+        {
+            progressBarFill.fillAmount = clampedRemaining;
+
+            if (clampedRemaining <= 0.2f)
+            {
+                progressBarFill.color = LowTimeColor;
+            }
+            else if (clampedRemaining <= 0.5f)
+            {
+                progressBarFill.color = MidTimeColor;
+            }
+            else
+            {
+                progressBarFill.color = HighTimeColor;
+            }
+        }
+
+        if (progressBarRoot != null)
+        {
+            progressBarRoot.gameObject.SetActive(true);
         }
     }
 }

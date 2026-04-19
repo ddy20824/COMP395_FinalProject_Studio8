@@ -11,6 +11,8 @@ public class OrderManager : MonoBehaviour
 
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
+    [SerializeField] private VoidEventChannel endGameEventChannel;
+    [SerializeField] private IntTypeEventChannel onOrderTimeoutCountChangedChannel;
 
     [Header("Camera Focus")]
     [SerializeField] private CameraFocusEventChannel cameraFocusChannel;
@@ -20,6 +22,10 @@ public class OrderManager : MonoBehaviour
     private GameObject[] activeOrders;
     private DishType[] activeDishTypes;
     private bool[] reservedOrders;
+    private float[] orderExpireTimes;
+    private float[] orderCreatedTimes;
+    private float[] orderTimeLimits;
+    private OrderUIController[] orderUIControllers;
 
     private List<DishType> availableDishes = new List<DishType>();
     private Level currentLevelIndex;
@@ -28,7 +34,10 @@ public class OrderManager : MonoBehaviour
     private float orderSpawnRate;
     private float orderSpawnTimer;
     private int currentOrderCount;
+    private int timeoutFailedCount;
+    private bool isGameOverTriggered;
     private bool isFocus = false;
+    private const int MaxTimeoutFailuresForGameOver = 5;
 
     void Start()
     {
@@ -48,7 +57,14 @@ public class OrderManager : MonoBehaviour
         activeOrders = new GameObject[maxOrderCount];
         activeDishTypes = new DishType[maxOrderCount];
         reservedOrders = new bool[maxOrderCount];
+        orderExpireTimes = new float[maxOrderCount];
+        orderCreatedTimes = new float[maxOrderCount];
+        orderTimeLimits = new float[maxOrderCount];
+        orderUIControllers = new OrderUIController[maxOrderCount];
         currentOrderCount = 0;
+        timeoutFailedCount = 0;
+        isGameOverTriggered = false;
+        RaiseOrderTimeoutCountChanged();
 
         // Spawn initial orders at the start of the level
         for (int i = 0; i < initialOrderCount; i++)
@@ -59,6 +75,18 @@ public class OrderManager : MonoBehaviour
 
     void Update()
     {
+        if (PauseMenu.Instance != null && PauseMenu.Instance.IsPause)
+        {
+            return;
+        }
+
+        if (isGameOverTriggered)
+        {
+            return;
+        }
+
+        UpdateOrderTimers();
+
         // Handle mouse input for order interactions (if needed)
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
@@ -116,13 +144,22 @@ public class OrderManager : MonoBehaviour
 
         activeOrders[spawnIndex] = newOrder;
         activeDishTypes[spawnIndex] = type;
+        orderCreatedTimes[spawnIndex] = Time.time;
+        orderTimeLimits[spawnIndex] = Mathf.Max(0.1f, dishMapping.orderTimeLimit);
+        orderExpireTimes[spawnIndex] = Time.time + orderTimeLimits[spawnIndex];
         currentOrderCount++;
         Debug.Log($"New order created at position {spawnIndex} for dish {type}. Current order count: {currentOrderCount}");
 
         // 4. initialize the order's UI with the dish and ingredient info
         if (newOrder.TryGetComponent(out OrderUIController controller))
         {
+            orderUIControllers[spawnIndex] = controller;
             controller.SetupOrder(dishMapping, requiredMappings);
+            controller.UpdateTimerVisual(1f);
+        }
+        else
+        {
+            orderUIControllers[spawnIndex] = null;
         }
     }
 
@@ -131,6 +168,10 @@ public class OrderManager : MonoBehaviour
     {
         if (index >= 0 && index < activeOrders.Length && activeOrders[index] != null)
         {
+            orderUIControllers[index] = null;
+            orderExpireTimes[index] = 0f;
+            orderCreatedTimes[index] = 0f;
+            orderTimeLimits[index] = 0f;
             Destroy(activeOrders[index]);
             activeOrders[index] = null; // Clear the record, the slot becomes empty again
             activeDishTypes[index] = default; // Clear the dish type
@@ -146,15 +187,37 @@ public class OrderManager : MonoBehaviour
         orderIndex = -1;
         orderTransform = null;
 
+        float bestRemainingTime = float.MaxValue;
+        float bestCreatedTime = float.MaxValue;
+
         for (int i = 0; i < activeOrders.Length; i++)
         {
             if (activeOrders[i] != null && !reservedOrders[i] && activeDishTypes[i] == type)
             {
-                reservedOrders[i] = true;
-                orderIndex = i;
-                orderTransform = activeOrders[i].transform;
-                return true;
+                float remainingTime = orderExpireTimes[i] - Time.time;
+                if (remainingTime <= 0f)
+                {
+                    continue;
+                }
+
+                float createdTime = orderCreatedTimes[i];
+                bool isBetterChoice = remainingTime < bestRemainingTime ||
+                                      (Mathf.Approximately(remainingTime, bestRemainingTime) && createdTime < bestCreatedTime);
+
+                if (isBetterChoice)
+                {
+                    bestRemainingTime = remainingTime;
+                    bestCreatedTime = createdTime;
+                    orderIndex = i;
+                }
             }
+        }
+
+        if (orderIndex >= 0)
+        {
+            reservedOrders[orderIndex] = true;
+            orderTransform = activeOrders[orderIndex].transform;
+            return true;
         }
 
         return false;
@@ -310,5 +373,82 @@ public class OrderManager : MonoBehaviour
         };
 
         cameraFocusChannel.Raise(data);
+    }
+
+    private void UpdateOrderTimers()
+    {
+        for (int i = 0; i < activeOrders.Length; i++)
+        {
+            if (isGameOverTriggered)
+            {
+                return;
+            }
+
+            if (activeOrders[i] == null)
+            {
+                continue;
+            }
+
+            float timeLimit = orderTimeLimits[i];
+            if (timeLimit <= 0f)
+            {
+                continue;
+            }
+
+            float remainingTime = orderExpireTimes[i] - Time.time;
+            float normalizedRemaining = Mathf.Clamp01(remainingTime / timeLimit);
+
+            if (orderUIControllers[i] != null)
+            {
+                orderUIControllers[i].UpdateTimerVisual(normalizedRemaining);
+            }
+
+            if (remainingTime > 0f)
+            {
+                continue;
+            }
+
+            TimeoutOrder(i);
+        }
+    }
+
+    private void TimeoutOrder(int index)
+    {
+        if (index < 0 || index >= activeOrders.Length || activeOrders[index] == null)
+        {
+            return;
+        }
+
+        if (reservedOrders[index])
+        {
+            reservedOrders[index] = false;
+        }
+
+        orderUIControllers[index] = null;
+        orderExpireTimes[index] = 0f;
+        orderCreatedTimes[index] = 0f;
+        orderTimeLimits[index] = 0f;
+
+        Destroy(activeOrders[index]);
+        activeOrders[index] = null;
+        activeDishTypes[index] = default;
+        currentOrderCount = Mathf.Max(0, currentOrderCount - 1);
+
+        onSFXRequest?.Raise(GameplaySFXType.ORDER_TIMEOUT);
+
+        timeoutFailedCount++;
+        RaiseOrderTimeoutCountChanged();
+        Debug.Log($"Order at position {index} timed out. Timeout failures: {timeoutFailedCount}");
+
+        if (!isGameOverTriggered && timeoutFailedCount >= MaxTimeoutFailuresForGameOver)
+        {
+            isGameOverTriggered = true;
+            endGameEventChannel?.Raise();
+        }
+    }
+
+    private void RaiseOrderTimeoutCountChanged()
+    {
+        onOrderTimeoutCountChangedChannel?.Raise(timeoutFailedCount);
     }
 }

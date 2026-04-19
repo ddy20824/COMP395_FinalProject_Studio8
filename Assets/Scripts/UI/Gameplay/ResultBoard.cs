@@ -19,6 +19,7 @@ public class ResultBoard : BasePanel<ResultBoard>
     [SerializeField] private GameObject successfulDish_HamPizza;
     [SerializeField] private GameObject successfulDish_PumpkinPie;
     [SerializeField] private GameObject successfulDish_NoDish;
+    [SerializeField] private GameObject dishesGroup;
 
     [SerializeField] private TextMeshProUGUI failedDish;
     [SerializeField] private TextMeshProUGUI noOrderedDish;
@@ -37,8 +38,11 @@ public class ResultBoard : BasePanel<ResultBoard>
     [Header("Events")]
     [SerializeField] private SFXTypeEventChannel onSFXRequest;
     [SerializeField] private VoidEventChannel endGameEventChannel;
+    [SerializeField] private IntTypeEventChannel onOrderTimeoutCountChangedChannel;
 
     private FinalScoreData scoreData;
+    private int currentOrderTimeoutCount;
+    private bool isTimeoutFailureGameOver;
 
     protected override void Awake()
     {
@@ -63,19 +67,31 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void OnEnable()
     {
+        currentOrderTimeoutCount = 0;
+        isTimeoutFailureGameOver = false;
+
         if (endGameEventChannel != null)
         {
             endGameEventChannel.Subscribe(ShowResultBoard);
         }
+        if (onOrderTimeoutCountChangedChannel != null)
+        {
+            onOrderTimeoutCountChangedChannel.Subscribe(HandleOrderTimeoutCountChanged);
+        }
         if (GameSession.CurrentLevelIndex == Level.Level3)
         {
             btnNextLevel.gameObject.SetActive(false);
+        }
+        else
+        {
+            btnNextLevel.gameObject.SetActive(true);
         }
         successfulDish_NoDish.SetActive(false);
         successfulDish_Ham.SetActive(false);
         successfulDish_TomatoPizza.SetActive(false);
         successfulDish_HamPizza.SetActive(false);
         successfulDish_PumpkinPie.SetActive(false);
+        dishesGroup.SetActive(true);
     }
 
     private void OnDisable()
@@ -83,6 +99,10 @@ public class ResultBoard : BasePanel<ResultBoard>
         if (endGameEventChannel != null)
         {
             endGameEventChannel.Unsubscribe(ShowResultBoard);
+        }
+        if (onOrderTimeoutCountChangedChannel != null)
+        {
+            onOrderTimeoutCountChangedChannel.Unsubscribe(HandleOrderTimeoutCountChanged);
         }
     }
 
@@ -121,6 +141,11 @@ public class ResultBoard : BasePanel<ResultBoard>
         PauseMenu.Instance.IsPause = true;
         blurVolume.SetActive(true);
 
+        if (isTimeoutFailureGameOver)
+        {
+            btnNextLevel.gameObject.SetActive(false);
+        }
+
         SetLevelSummary(scoreManager.getFinalScoreData().totalScore);
         ShowMe();
     }
@@ -150,8 +175,18 @@ public class ResultBoard : BasePanel<ResultBoard>
 
     private void SetLevelSummary(int score)
     {
-        SetStars(score);
-        SetAdvice(score);
+        InitStarImages();
+
+        if (isTimeoutFailureGameOver)
+        {
+            SetTimeoutFailureAdvice();
+        }
+        else
+        {
+            SetStars(score);
+            SetAdvice(score);
+        }
+
         setScoreDetail();
     }
 
@@ -189,6 +224,17 @@ public class ResultBoard : BasePanel<ResultBoard>
         {
             freeAdvice.text = "Zero Waste! You saved the planet today. Even the polar bears are cheering for you!";
         }
+    }
+
+    private void SetTimeoutFailureAdvice()
+    {
+        freeAdvice.text = "<color=red><b>Kitchen Closed!</b></color>\nManage your time as carefully as your ingredients.";
+    }
+
+    private void HandleOrderTimeoutCountChanged(int timeoutCount)
+    {
+        currentOrderTimeoutCount = timeoutCount;
+        isTimeoutFailureGameOver = currentOrderTimeoutCount >= 5;
     }
 
     private void ResetGameState()
@@ -240,6 +286,7 @@ public class ResultBoard : BasePanel<ResultBoard>
         else
         {
             successfulDish_NoDish.SetActive(true);
+            dishesGroup.SetActive(false);
         }
 
         // successfulDish.text = sb.ToString();
