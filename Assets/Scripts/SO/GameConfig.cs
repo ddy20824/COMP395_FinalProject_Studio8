@@ -50,6 +50,7 @@ public class DishTypeMapping
     public int scoreValue;
     public List<IngredientType> requiredIngredients;
     public int cookingTime; // in seconds
+    public float orderTimeLimit = 30f;
     public float carbonFootprint;
 }
 
